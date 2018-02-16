@@ -1,7 +1,7 @@
 extends Sprite
 
 
-export (int) var line_width
+export (int) var line_width = 3
 
 var unit_size = Vector2()
 
@@ -17,8 +17,3 @@ func resize_line(var width):
 	
 	line_width = width
 	self.region_rect = Rect2(Vector2(), Vector2(unit_size.x * width, unit_size.y))
-	$Area/Collider.shape.extents = region_rect.size / 2
-	
-	
-
-
