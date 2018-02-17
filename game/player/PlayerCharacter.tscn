@@ -9,7 +9,7 @@
 custom_solver_bias = 0.0
 radius = 40.5
 
-[node name="Character" type="KinematicBody2D" index="0"]
+[node name="Character" type="KinematicBody2D"]
 
 input_pickable = true
 collision_layer = 1
@@ -19,7 +19,6 @@ script = ExtResource( 1 )
 
 [node name="MainBall" type="Sprite" parent="." index="0"]
 
-editor/display_folded = true
 texture = ExtResource( 2 )
 
 [node name="Core" type="Sprite" parent="MainBall" index="0"]

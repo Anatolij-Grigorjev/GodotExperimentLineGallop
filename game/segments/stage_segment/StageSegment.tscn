@@ -6,14 +6,14 @@
 [sub_resource type="RectangleShape2D" id=1]
 
 custom_solver_bias = 0.0
-extents = Vector2( 320, 32 )
+extents = Vector2( 98, 32 )
 
 [node name="StageSegment" type="Sprite"]
 
-position = Vector2( 320, 32 )
+position = Vector2( 98, 32 )
 texture = ExtResource( 1 )
 region_enabled = true
-region_rect = Rect2( 0, 0, 640, 64 )
+region_rect = Rect2( 0, 0, 192, 64 )
 script = ExtResource( 2 )
 _sections_unfolded = [ "Region", "Transform", "Visibility" ]
 __meta__ = {

@@ -10,9 +10,9 @@ enum ELEMENTS {
 }
 
 var ELEM_COLORS = {
-	FIRE: Color(255, 37, 37),
-	ICE: Color(21, 224, 214),
-	WIND: Color(5, 252, 50)
+	FIRE: Color(1.0, 0.145, 0.145),
+	ICE: Color(0.093, 0.878, 0.839),
+	WIND: Color(0.019, 0.988, 0.196)
 }
 
 
@@ -22,7 +22,6 @@ func _ready():
 	# Initialization here
 	pass
 
-#func _process(delta):
-#	# Called every frame. Delta is time since last frame.
-#	# Update game logic here.
-#	pass
+
+func eq_with_tolerance(var val1, var val2, var tolerance = val1 * 0.05):
+	return abs(val1 - val2) <= tolerance
