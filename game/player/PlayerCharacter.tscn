@@ -10,14 +10,13 @@
 custom_solver_bias = 0.0
 radius = 40.5
 
-[sub_resource type="RectangleShape2D" id=3]
+[sub_resource type="RectangleShape2D" id=2]
 
 custom_solver_bias = 0.0
 extents = Vector2( 16, 16 )
 
-[sub_resource type="Animation" id=2]
+[sub_resource type="Animation" id=3]
 
-resource_name = "rotate_cannons"
 length = 1.0
 loop = false
 step = 0.1
@@ -77,6 +76,7 @@ collision_layer = 1
 collision_mask = 1
 collision/safe_margin = 0.08
 script = ExtResource( 1 )
+_sections_unfolded = [ "Transform" ]
 
 [node name="MainBall" type="Sprite" parent="." index="0"]
 
@@ -91,22 +91,22 @@ _sections_unfolded = [ "Material", "Transform", "Visibility" ]
 
 [node name="POSVTop" type="Position2D" parent="MainBall" index="1"]
 
-position = Vector2( 0, -41.5 )
+position = Vector2( 0, -71.5 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="POSHLeft" type="Position2D" parent="MainBall" index="2"]
 
-position = Vector2( -41.5, 0 )
+position = Vector2( -71.5, 0 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="POSVBottom" type="Position2D" parent="MainBall" index="3"]
 
-position = Vector2( 0, 41.5 )
+position = Vector2( 0, 71.5 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="POSHRight" type="Position2D" parent="MainBall" index="4"]
 
-position = Vector2( 41.5, 0 )
+position = Vector2( 71.5, 0 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="Cannons" type="Node2D" parent="MainBall" index="5"]
@@ -133,17 +133,18 @@ _sections_unfolded = [ "Transform" ]
 [node name="Collider" type="CollisionShape2D" parent="." index="1"]
 
 shape = SubResource( 1 )
+_sections_unfolded = [ "Transform" ]
 
 [node name="ColliderCannonA" type="CollisionShape2D" parent="." index="2"]
 
 position = Vector2( 55, 0 )
-shape = SubResource( 3 )
+shape = SubResource( 2 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="ColliderCannonB" type="CollisionShape2D" parent="." index="3"]
 
 position = Vector2( -55, 0 )
-shape = SubResource( 3 )
+shape = SubResource( 2 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="Animation" type="AnimationPlayer" parent="." index="4"]
@@ -153,7 +154,7 @@ autoplay = ""
 playback_process_mode = 1
 playback_default_blend_time = 0.0
 playback_speed = 1.0
-anims/rotate_cannons = SubResource( 2 )
+anims/rotate_cannons = SubResource( 3 )
 blend_times = [  ]
 
 
