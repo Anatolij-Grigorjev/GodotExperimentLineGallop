@@ -3,19 +3,26 @@ extends KinematicBody2D
 onready var G = get_node("/root/Globals")
 
 const SPEED = 200
-const FRICTION_COEF = 0.25
 
-var prev_mouse_pos
+const GROUP_CURR_LINES = "curr_lines"
+
 var curr_mouse_pos
 
+#index of current walls element
 var curr_elem_idx = 0
 
+#sides A and B of cannon direction
 var point_side_a
 var point_side_b
 
+#are cannons left-right oriented? might be top-bottom
 var orientation_LR = true
 
+#i the character firing a line right now? cant move and flip cannons
 var is_firing_line = false
+
+#fire segment example
+var segment_fire_packed = preload("res://segments/fire_segment/FireSegment.tscn")
 
 onready var point_segment_transform = {
 	
@@ -43,7 +50,6 @@ func _ready():
 	Input.warp_mouse_position(position)
 	
 	curr_mouse_pos = position
-	prev_mouse_pos = curr_mouse_pos
 	
 	set_elem_idx(curr_elem_idx)
 	
@@ -63,19 +69,19 @@ func _physics_process(delta):
 	curr_mouse_pos = get_viewport().get_mouse_position()
 	var friction = 1
 	
-	#if the mouse stopped moving (within a tolerance)
-	#then friciton should be appleid to slow down the player
-#	if (G.eq_with_tolerance(curr_mouse_pos.x, prev_mouse_pos.x)
-#	and G.eq_with_tolerance(curr_mouse_pos.y, prev_mouse_pos.y)):
-#		friction = FRICTION_COEF
-	
-	var velocity = Input.get_last_mouse_speed().normalized() * SPEED * delta
-	
-	#this already takes delta into account when performed, 
-	#so no need for extra
-	move_and_collide(velocity)
-	
-	prev_mouse_pos = curr_mouse_pos
+	#if the mouse and player position is different enough, then
+	#move player to mouse
+	if (not (G.eq_with_tolerance(curr_mouse_pos.x, global_position.x)
+	and G.eq_with_tolerance(curr_mouse_pos.y, global_position.y))):
+		
+		#end of path - start of path to get vector poitning from start to end
+		var direction = (curr_mouse_pos - global_position).normalized()
+		
+		var velocity = direction * SPEED * delta
+		
+		#this already takes delta into account when performed, 
+		#so no need for extra
+		move_and_collide(velocity)
 	
 
 	pass
@@ -100,11 +106,40 @@ func _process(delta):
 			flip_cannons()
 		
 		if (Input.is_action_just_released("start_stop_line")):
-			is_firing_line = not is_firing_line
+			#start firing
+			if (not is_firing_line):
+				is_firing_line = true
+				
+				for point in [point_side_a, point_side_b]:
+					make_line_at_point(segment_fire_packed, point)
+				pass
+			else:
+				#cancel lines
+				for line in get_tree().get_nodes_in_group(GROUP_CURR_LINES):
+					line.queue_free()
+				
+				is_firing_line = false
+				pass
 			pass
 	
 	pass
-	
+
+
+func make_line_at_point(packed_line, point):
+	var line = packed_line.instance()
+	line.position = point.position
+	#transform line appearnce as required
+	if (point_segment_transform.has(point)):
+		var transform = point_segment_transform[point]
+		if (transform.has("rotate")):
+			line.rotation_degrees = transform["rotate"]
+		if (transform.has("flip_v")):
+			line.flip_v = transform["flip_v"]
+		
+	add_child(line)
+	#set initial line size
+	line.resize_line(1)
+	line.add_to_group(GROUP_CURR_LINES)
 	
 
 func set_elem_idx(var new_idx):

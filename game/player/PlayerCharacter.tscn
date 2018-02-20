@@ -80,7 +80,6 @@ _sections_unfolded = [ "Transform" ]
 
 [node name="MainBall" type="Sprite" parent="." index="0"]
 
-editor/display_folded = true
 texture = ExtResource( 2 )
 
 [node name="Core" type="Sprite" parent="MainBall" index="0"]
@@ -91,22 +90,22 @@ _sections_unfolded = [ "Material", "Transform", "Visibility" ]
 
 [node name="POSVTop" type="Position2D" parent="MainBall" index="1"]
 
-position = Vector2( 0, -71.5 )
+position = Vector2( 0, -103.5 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="POSHLeft" type="Position2D" parent="MainBall" index="2"]
 
-position = Vector2( -71.5, 0 )
+position = Vector2( -103.5, 0 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="POSVBottom" type="Position2D" parent="MainBall" index="3"]
 
-position = Vector2( 0, 71.5 )
+position = Vector2( 0, 103.5 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="POSHRight" type="Position2D" parent="MainBall" index="4"]
 
-position = Vector2( 71.5, 0 )
+position = Vector2( 103.5, 0 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="Cannons" type="Node2D" parent="MainBall" index="5"]

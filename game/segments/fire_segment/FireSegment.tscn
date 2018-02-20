@@ -10,17 +10,16 @@ extents = Vector2( 32, 32 )
 
 [node name="FireSegment" type="Sprite"]
 
-position = Vector2( 128, 32 )
 texture = ExtResource( 1 )
 region_enabled = true
-region_rect = Rect2( 0, 0, 256, 64 )
+region_rect = Rect2( 0, 0, 128, 64 )
 script = ExtResource( 2 )
 _sections_unfolded = [ "Offset", "Region", "Transform" ]
-line_width = 3
+line_width = 2
 
 [node name="Area" type="Area2D" parent="." index="0"]
 
-position = Vector2( 96, 0 )
+position = Vector2( 32, 0 )
 input_pickable = true
 gravity_vec = Vector2( 0, 1 )
 gravity = 98.0
