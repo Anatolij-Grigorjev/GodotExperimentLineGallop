@@ -6,20 +6,20 @@
 [sub_resource type="RectangleShape2D" id=1]
 
 custom_solver_bias = 0.0
-extents = Vector2( 32, 32 )
+extents = Vector2( 16, 16 )
 
 [node name="FireSegment" type="Sprite"]
 
 texture = ExtResource( 1 )
 region_enabled = true
-region_rect = Rect2( 0, 0, 128, 64 )
+region_rect = Rect2( 0, 0, 64, 32 )
 script = ExtResource( 2 )
 _sections_unfolded = [ "Offset", "Region", "Transform" ]
 line_width = 2
 
 [node name="Area" type="Area2D" parent="." index="0"]
 
-position = Vector2( 32, 0 )
+position = Vector2( 16, 0 )
 input_pickable = true
 gravity_vec = Vector2( 0, 1 )
 gravity = 98.0

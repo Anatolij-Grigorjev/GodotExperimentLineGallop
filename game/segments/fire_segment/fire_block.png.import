@@ -7,10 +7,10 @@ path="res://.import/fire_block.png-face7a73e8acbf86b256c06f5f91d4aa.stex"
 [deps]
 
 source_file="res://segments/fire_segment/fire_block.png"
-source_md5="4522d7646dbff74a35d471c34c1a3790"
+source_md5="214b32e9d258ce0c6d1c57a5c990a41a"
 
 dest_files=[ "res://.import/fire_block.png-face7a73e8acbf86b256c06f5f91d4aa.stex" ]
-dest_md5="6bf77e7d89c610daa6e98f0947497a2b"
+dest_md5="810a17e54d2a4c496efd68c23139142f"
 
 [params]
 

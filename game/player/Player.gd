@@ -3,8 +3,8 @@ extends KinematicBody2D
 onready var G = get_node("/root/Globals")
 
 const SPEED = 200
-
 const GROUP_CURR_LINES = "curr_lines"
+const SEGMENT_COOLDOWN_SEC = 1.0
 
 var curr_mouse_pos
 
@@ -21,7 +21,9 @@ var orientation_LR = true
 #i the character firing a line right now? cant move and flip cannons
 var is_firing_line = false
 
-#fire segment example
+var curr_segment_cooldown
+
+#fire segment scene
 var segment_fire_packed = preload("res://segments/fire_segment/FireSegment.tscn")
 
 onready var point_segment_transform = {
@@ -109,20 +111,36 @@ func _process(delta):
 			#start firing
 			if (not is_firing_line):
 				is_firing_line = true
+				curr_segment_cooldown = SEGMENT_COOLDOWN_SEC
+				$Animation.play("firing")
+				#TODO: reconcile animation with appearance of blocks
 				
 				for point in [point_side_a, point_side_b]:
 					make_line_at_point(segment_fire_packed, point)
 				pass
 			else:
 				#cancel lines
-				for line in get_tree().get_nodes_in_group(GROUP_CURR_LINES):
+				for line in curr_lines():
 					line.queue_free()
 				
+				$Animation.stop(true)
 				is_firing_line = false
 				pass
 			pass
 	
+	#update line
+	if (is_firing_line):
+		curr_segment_cooldown -= delta
+		if (curr_segment_cooldown <= 0):
+			curr_segment_cooldown = SEGMENT_COOLDOWN_SEC
+			for line in curr_lines():
+				line.resize_line(line.line_width + 1)
+				add_line_position_unit(line)
+	
 	pass
+
+func curr_lines():
+	return get_tree().get_nodes_in_group(GROUP_CURR_LINES)
 
 
 func make_line_at_point(packed_line, point):
@@ -139,8 +157,14 @@ func make_line_at_point(packed_line, point):
 	add_child(line)
 	#set initial line size
 	line.resize_line(1)
+	add_line_position_unit(line)
 	line.add_to_group(GROUP_CURR_LINES)
 	
+func add_line_position_unit(line):
+	if (orientation_LR):
+		line.position.x += (line.unit_size.x / 2) * sign(line.position.x)
+	else:
+		line.position.y += (line.unit_size.y / 2) * sign(line.position.y)
 
 func set_elem_idx(var new_idx):
 	#clamp new idx just in case

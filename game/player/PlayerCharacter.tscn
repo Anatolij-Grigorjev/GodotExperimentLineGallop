@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://player/Player.gd" type="Script" id=1]
 [ext_resource path="res://player/sprite.png" type="Texture" id=2]
@@ -14,6 +14,37 @@ radius = 40.5
 
 custom_solver_bias = 0.0
 extents = Vector2( 16, 16 )
+
+[sub_resource type="Animation" id=4]
+
+resource_name = "firing"
+length = 1.0
+loop = true
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("MainBall/Core:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 360.0, 0.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("MainBall/Core:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0.75, 0.75 ), Vector2( 1, 1 ), Vector2( 0.75, 0.75 ) ]
+}
 
 [sub_resource type="Animation" id=3]
 
@@ -90,22 +121,22 @@ _sections_unfolded = [ "Material", "Transform", "Visibility" ]
 
 [node name="POSVTop" type="Position2D" parent="MainBall" index="1"]
 
-position = Vector2( 0, -103.5 )
+position = Vector2( 0, -71.5 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="POSHLeft" type="Position2D" parent="MainBall" index="2"]
 
-position = Vector2( -103.5, 0 )
+position = Vector2( -71.5, 0 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="POSVBottom" type="Position2D" parent="MainBall" index="3"]
 
-position = Vector2( 0, 103.5 )
+position = Vector2( 0, 71.5 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="POSHRight" type="Position2D" parent="MainBall" index="4"]
 
-position = Vector2( 103.5, 0 )
+position = Vector2( 71.5, 0 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="Cannons" type="Node2D" parent="MainBall" index="5"]
@@ -131,6 +162,7 @@ _sections_unfolded = [ "Transform" ]
 
 [node name="Collider" type="CollisionShape2D" parent="." index="1"]
 
+visible = false
 shape = SubResource( 1 )
 _sections_unfolded = [ "Transform" ]
 
@@ -153,6 +185,7 @@ autoplay = ""
 playback_process_mode = 1
 playback_default_blend_time = 0.0
 playback_speed = 1.0
+anims/firing = SubResource( 4 )
 anims/rotate_cannons = SubResource( 3 )
 blend_times = [  ]
 
