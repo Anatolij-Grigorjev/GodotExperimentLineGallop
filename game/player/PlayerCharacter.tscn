@@ -22,24 +22,12 @@ length = 1.0
 loop = true
 step = 0.1
 tracks/0/type = "value"
-tracks/0/path = NodePath("MainBall/Core:rotation_degrees")
+tracks/0/path = NodePath("MainBall/Core:scale")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.5, 1 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
-"update": 0,
-"values": [ 0.0, 360.0, 0.0 ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath("MainBall/Core:scale")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
 "times": PoolRealArray( 0, 0.5, 1 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
@@ -111,6 +99,7 @@ _sections_unfolded = [ "Transform" ]
 
 [node name="MainBall" type="Sprite" parent="." index="0"]
 
+editor/display_folded = true
 texture = ExtResource( 2 )
 
 [node name="Core" type="Sprite" parent="MainBall" index="0"]
@@ -188,5 +177,14 @@ playback_speed = 1.0
 anims/firing = SubResource( 4 )
 anims/rotate_cannons = SubResource( 3 )
 blend_times = [  ]
+
+[node name="ExpandTimer" type="Timer" parent="." index="5"]
+
+process_mode = 1
+wait_time = 1.0
+one_shot = false
+autostart = false
+
+[connection signal="timeout" from="ExpandTimer" to="." method="expand_curr_lines"]
 
 

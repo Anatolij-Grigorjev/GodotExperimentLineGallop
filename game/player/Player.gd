@@ -21,8 +21,6 @@ var orientation_LR = true
 #i the character firing a line right now? cant move and flip cannons
 var is_firing_line = false
 
-var curr_segment_cooldown
-
 #fire segment scene
 var segment_fire_packed = preload("res://segments/fire_segment/FireSegment.tscn")
 
@@ -42,6 +40,8 @@ onready var point_segment_transform = {
 }
 
 func _ready():
+	
+	$ExpandTimer.wait_time = SEGMENT_COOLDOWN_SEC
 	
 	#is orientation left/right right now for cannons
 	orientation_LR = true
@@ -92,7 +92,7 @@ func _physics_process(delta):
 func _process(delta):
 	
 	#handle elem change input
-	if (Input.is_action_just_released("cycle_elements")):
+	if (Input.is_action_just_released("cycle_elements") and not is_firing_line):
 		set_elem_idx(curr_elem_idx + 1)
 	
 	var flip_gun_playing = $Animation.current_animation == "flip_line_gun" and $Animation.is_playing()
@@ -111,9 +111,10 @@ func _process(delta):
 			#start firing
 			if (not is_firing_line):
 				is_firing_line = true
-				curr_segment_cooldown = SEGMENT_COOLDOWN_SEC
+				$ExpandTimer.wait_time = SEGMENT_COOLDOWN_SEC
+				$ExpandTimer.start()
 				$Animation.play("firing")
-				#TODO: reconcile animation with appearance of blocks
+				
 				
 				for point in [point_side_a, point_side_b]:
 					make_line_at_point(segment_fire_packed, point)
@@ -123,21 +124,24 @@ func _process(delta):
 				for line in curr_lines():
 					line.queue_free()
 				
+				$Animation.seek(0.0, true)
 				$Animation.stop(true)
+				$ExpandTimer.stop()
 				is_firing_line = false
 				pass
 			pass
 	
-	#update line
-	if (is_firing_line):
-		curr_segment_cooldown -= delta
-		if (curr_segment_cooldown <= 0):
-			curr_segment_cooldown = SEGMENT_COOLDOWN_SEC
-			for line in curr_lines():
-				line.resize_line(line.line_width + 1)
-				add_line_position_unit(line)
-	
 	pass
+	
+func expand_curr_lines():
+	#account for stopped firing before timeout
+	if (is_firing_line):
+		for line in curr_lines():
+			line.resize_line(line.line_width + 1)
+			add_line_position_unit(line)
+		$ExpandTimer.wait_time = SEGMENT_COOLDOWN_SEC
+		$ExpandTimer.start()
+	
 
 func curr_lines():
 	return get_tree().get_nodes_in_group(GROUP_CURR_LINES)
