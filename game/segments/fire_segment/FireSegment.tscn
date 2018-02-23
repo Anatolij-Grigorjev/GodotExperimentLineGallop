@@ -8,7 +8,7 @@
 custom_solver_bias = 0.0
 extents = Vector2( 16, 16 )
 
-[node name="FireSegment" type="Sprite"]
+[node name="FireSegment" type="Sprite" index="0"]
 
 texture = ExtResource( 1 )
 region_enabled = true
@@ -35,5 +35,7 @@ rotation = 4.71239
 shape = SubResource( 1 )
 one_way_collision = true
 _sections_unfolded = [ "Transform" ]
+
+[connection signal="body_entered" from="Area" to="." method="_on_Area_body_entered"]
 
 

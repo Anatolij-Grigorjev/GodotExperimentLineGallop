@@ -137,8 +137,9 @@ func expand_curr_lines():
 	#account for stopped firing before timeout
 	if (is_firing_line):
 		for line in curr_lines():
-			line.resize_line(line.line_width + 1)
-			add_line_position_unit(line)
+			if (not line.done_growing):
+				line.resize_line(line.line_width + 1)
+				add_line_position_unit(line)
 		$ExpandTimer.wait_time = SEGMENT_COOLDOWN_SEC
 		$ExpandTimer.start()
 	
@@ -181,6 +182,19 @@ func set_elem_idx(var new_idx):
 	curr_elem_idx = idx
 	pass
 	
+func all_lines_grown():
+	var all_done = true
+	for line in curr_lines():
+		if (not line.done_growing):
+			return false
+	return all_done
+	
+func line_connected(line, wall):
+	var lines_done = all_lines_grown()
+	if (lines_done):
+		#finish new wall segment
+		
+		pass
 	
 	
 func flip_cannons():
