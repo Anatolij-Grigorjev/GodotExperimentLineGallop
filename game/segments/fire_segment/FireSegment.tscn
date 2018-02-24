@@ -8,7 +8,7 @@
 custom_solver_bias = 0.0
 extents = Vector2( 16, 16 )
 
-[node name="FireSegment" type="Sprite" index="0"]
+[node name="FireSegment" type="Sprite"]
 
 texture = ExtResource( 1 )
 region_enabled = true

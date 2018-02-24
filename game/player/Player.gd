@@ -2,6 +2,9 @@ extends KinematicBody2D
 
 onready var G = get_node("/root/Globals")
 
+#abstract segment handle for static functions
+onready var AbstractSegment = preload("res://segments/AbstractSegment.gd")
+
 const SPEED = 200
 const GROUP_CURR_LINES = "curr_lines"
 const SEGMENT_COOLDOWN_SEC = 1.0
@@ -24,20 +27,32 @@ var is_firing_line = false
 #fire segment scene
 var segment_fire_packed = preload("res://segments/fire_segment/FireSegment.tscn")
 
+enum LINE_ORIENTATIONS {
+	LO_LEFT = 180,
+	LO_TOP = 270,
+	LO_RIGHT = 0,
+	LO_BOTTOM = 90
+}
+
+
 onready var point_segment_transform = {
 	
 	$MainBall/POSVTop: {
-			"rotate": 270,
+			"rotate": LO_TOP,
 			"flip_v": true
 		},
 	$MainBall/POSVBottom: {
-			"rotate": 90
+			"rotate": LO_BOTTOM
 		},
 	$MainBall/POSHLeft: {
-			"rotate": 180,
+			"rotate": LO_LEFT,
 			"flip_v": true
 		}
 }
+
+
+#when wall was added, inform level
+signal wall_created(wall)
 
 func _ready():
 	
@@ -121,13 +136,7 @@ func _process(delta):
 				pass
 			else:
 				#cancel lines
-				for line in curr_lines():
-					line.queue_free()
-				
-				$Animation.seek(0.0, true)
-				$Animation.stop(true)
-				$ExpandTimer.stop()
-				is_firing_line = false
+				stop_firing()
 				pass
 			pass
 	
@@ -164,6 +173,8 @@ func make_line_at_point(packed_line, point):
 	line.resize_line(1)
 	add_line_position_unit(line)
 	line.add_to_group(GROUP_CURR_LINES)
+	line.connect("connected_wall", self, "line_connected")
+
 	
 func add_line_position_unit(line):
 	if (orientation_LR):
@@ -193,9 +204,53 @@ func line_connected(line, wall):
 	var lines_done = all_lines_grown()
 	if (lines_done):
 		#finish new wall segment
+		var lines = curr_lines()
+		var connect_point_1 = get_line_connect_point(lines[0])
+		var connect_point_2 = get_line_connect_point(lines[1])
+		
+		#create the new line to add
+		var parent = get_parent().get_node("Segments")
+		var new_wall = AbstractSegment.create_segment_at_point(parent,
+		 segment_fire_packed, 
+		connect_point_1, 
+		connect_point_2)
+		
+		#tell level about it
+		emit_signal("wall_created", new_wall)
+		
+		#stop firing lines
+		stop_firing()
 		
 		pass
 	
+#find global position of line business end	
+func get_line_connect_point(line):
+	var middle = line.position
+	var half_length = line.unit_size.x * line.line_width * 0.5
+	if (line.rotation_degrees == LO_RIGHT):
+			return Vector2(middle.x + half_length, middle.y)
+	if (line.rotation_degrees == LO_BOTTOM):
+		return Vector2(middle.x, middle.y + half_length)
+	if (line.rotation_degrees == LO_LEFT):
+		return Vector2(middle.x - half_length, middle.y)
+	if (line.rotation_degrees == LO_TOP):
+		return Vector2(middle.x, middle.y - half_length.y)
+	else:
+		print("weird rotation %s for line %s!" % [line.rotation_degrees, line])
+		breakpoint
+		
+		
+	
+func stop_firing():
+	for line in curr_lines():
+		line.queue_free()
+	
+	$Animation.seek(0.0, true)
+	$Animation.stop(true)
+	$ExpandTimer.stop()
+	is_firing_line = false
+	
+
 	
 func flip_cannons():
 	

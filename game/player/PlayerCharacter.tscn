@@ -88,7 +88,7 @@ tracks/3/keys = {
 "values": [ Vector2( -55, 0 ), Vector2( 0, -55 ) ]
 }
 
-[node name="Character" type="KinematicBody2D" index="0"]
+[node name="Character" type="KinematicBody2D"]
 
 input_pickable = true
 collision_layer = 1
