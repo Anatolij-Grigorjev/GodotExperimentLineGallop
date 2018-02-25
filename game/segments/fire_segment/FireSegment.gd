@@ -20,7 +20,7 @@ func resize_line(var width):
 	
 	.resize_line(width)
 	#ensure collider covers exactly one last block
-	$Area/Collider.shape.extents = unit_size
+	$Area/Collider.shape.extents = unit_size / 2
 	#special case - if only 1 block, the area covers it
 	if (width == 1):
 		$Area.position = Vector2()
@@ -28,7 +28,7 @@ func resize_line(var width):
 	else:
 		#ensure collider area is at last block 
 		#(should be 1/2 of one length + all others away from center)
-		$Area.position = Vector2((line_width - 1) * unit_size.x + unit_size.x / 2, 0)
+		$Area.position = Vector2((line_width - 1) * unit_size.x / 2, 0)
 	
 
 func body_is_wall(body):

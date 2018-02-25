@@ -14,5 +14,5 @@ func _ready():
 
 
 func wall_created(wall):
-	breakpoint
+#	breakpoint
 	pass

@@ -25,3 +25,4 @@ func _ready():
 
 func eq_with_tolerance(var val1, var val2, var tolerance = val1 * 0.05):
 	return abs(val1 - val2) <= tolerance
+	

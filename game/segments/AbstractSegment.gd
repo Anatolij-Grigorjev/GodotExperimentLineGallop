@@ -21,15 +21,16 @@ func resize_line(var width):
 static func create_segment_at_points(parent, packed_line, point_from, point_to):
 	
 	var mid_point = (point_from + point_to) / 2
-	var diff = abs(point_from - point_to)
+	var diff_v = point_from - point_to
+	var diff = max(abs(diff_v.x), abs(diff_v.y))
 	var segment = create_add_segment(parent, packed_line)
-	segment.position = mid_point
+	segment.global_position = mid_point
 	
-	var units = max(diff.x / segment.unit_size.x, diff.y / segment.unit_size.y)
+	var units = int(round(max(diff / segment.unit_size.x, diff / segment.unit_size.y)))
+	segment.resize_line(units)
 	var line_area = segment.get_node("Area")
 	line_area.position = segment.position
-	line_area.get_node("Collider").shape.extents = segment.unit_size * units
-	segment.resize_line(units)
+	line_area.get_node("Collider").shape.extents = (segment.unit_size / 2) * units
 	
 	#return created line
 	return segment

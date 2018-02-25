@@ -210,7 +210,7 @@ func line_connected(line, wall):
 		
 		#create the new line to add
 		var parent = get_parent().get_node("Segments")
-		var new_wall = AbstractSegment.create_segment_at_point(parent,
+		var new_wall = AbstractSegment.create_segment_at_points(parent,
 		 segment_fire_packed, 
 		connect_point_1, 
 		connect_point_2)
@@ -225,16 +225,20 @@ func line_connected(line, wall):
 	
 #find global position of line business end	
 func get_line_connect_point(line):
-	var middle = line.position
+	var middle = line.global_position
 	var half_length = line.unit_size.x * line.line_width * 0.5
+	
 	if (line.rotation_degrees == LO_RIGHT):
-			return Vector2(middle.x + half_length, middle.y)
+		return Vector2(middle.x + half_length, middle.y)
+		
 	if (line.rotation_degrees == LO_BOTTOM):
 		return Vector2(middle.x, middle.y + half_length)
+		
 	if (line.rotation_degrees == LO_LEFT):
 		return Vector2(middle.x - half_length, middle.y)
+		
 	if (line.rotation_degrees == LO_TOP):
-		return Vector2(middle.x, middle.y - half_length.y)
+		return Vector2(middle.x, middle.y - half_length)
 	else:
 		print("weird rotation %s for line %s!" % [line.rotation_degrees, line])
 		breakpoint
