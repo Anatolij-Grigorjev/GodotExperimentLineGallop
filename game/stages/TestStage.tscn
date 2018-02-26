@@ -16,6 +16,8 @@ position = Vector2( 263.912, 153.722 )
 
 [node name="Segments" type="Node2D" parent="." index="1"]
 
+_sections_unfolded = [ "Transform", "Visibility" ]
+
 [node name="StageSegment" parent="Segments" index="0" instance=ExtResource( 3 )]
 
 position = Vector2( 58.033, 120.251 )
@@ -35,7 +37,7 @@ line_width = 4
 [node name="StageSegment4" parent="Segments" index="3" instance=ExtResource( 3 )]
 
 position = Vector2( 419.892, 431.777 )
-line_width = 4
+line_width = 5
 
 [node name="StageSegment5" parent="Segments" index="4" instance=ExtResource( 3 )]
 
@@ -51,7 +53,8 @@ rotation = 0.0203623
 
 position = Vector2( 650.985, 437.316 )
 rotation = -0.0364598
-line_width = 4
+_sections_unfolded = [ "Animation", "Offset", "Region", "Transform", "Visibility" ]
+line_width = 5
 
 [node name="StageSegment8" parent="Segments" index="7" instance=ExtResource( 3 )]
 
@@ -70,7 +73,7 @@ rotation = 1.62387
 
 [node name="StageSegment11" parent="Segments" index="10" instance=ExtResource( 3 )]
 
-position = Vector2( 810.254, 170.936 )
+position = Vector2( 810.254, 168.936 )
 rotation = 1.52455
 
 

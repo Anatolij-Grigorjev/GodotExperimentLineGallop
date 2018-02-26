@@ -210,10 +210,12 @@ func line_connected(line, wall):
 		
 		#create the new line to add
 		var parent = get_parent().get_node("Segments")
-		var new_wall = AbstractSegment.create_segment_at_points(parent,
-		 segment_fire_packed, 
+		var new_wall = AbstractSegment.create_segment_at_points(
+		parent,
+		segment_fire_packed, 
 		connect_point_1, 
-		connect_point_2)
+		connect_point_2,
+		orientation_LR)
 		
 		#tell level about it
 		emit_signal("wall_created", new_wall)
