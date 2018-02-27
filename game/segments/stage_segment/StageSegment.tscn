@@ -7,6 +7,7 @@
 
 custom_solver_bias = 0.0
 extents = Vector2( 98, 32 )
+_sections_unfolded = [ "Resource" ]
 
 [node name="StageSegment" type="Sprite"]
 
@@ -35,6 +36,6 @@ _sections_unfolded = [ "Collision", "Transform" ]
 [node name="Collider" type="CollisionShape2D" parent="Area" index="0"]
 
 shape = SubResource( 1 )
-_sections_unfolded = [ "Transform" ]
+_sections_unfolded = [ "Material", "Transform", "Visibility" ]
 
 

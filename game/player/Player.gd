@@ -27,6 +27,12 @@ var is_firing_line = false
 #fire segment scene
 var segment_fire_packed = preload("res://segments/fire_segment/FireSegment.tscn")
 
+#wall scene
+var segment_stage_packed = preload("res://segments/stage_segment/StageSegment.tscn")
+
+#fire texture, to set for wall
+var fire_texture = preload("res://segments/fire_segment/fire_block.png")
+
 enum LINE_ORIENTATIONS {
 	LO_LEFT = 180,
 	LO_TOP = 270,
@@ -212,7 +218,8 @@ func line_connected(line, wall):
 		var parent = get_parent().get_node("Segments")
 		var new_wall = AbstractSegment.create_segment_at_points(
 		parent,
-		segment_fire_packed, 
+		segment_stage_packed,
+		fire_texture, 
 		connect_point_1, 
 		connect_point_2,
 		orientation_LR)

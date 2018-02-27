@@ -3,16 +3,12 @@ extends "../AbstractSegment.gd"
 #did the line connect with a wall
 var done_growing = false
 
-#is this segment actually a static wall
-var is_wall = false
-
 signal connected_wall(line, wall)
 
 func _ready():
 	._ready()
 	
 	done_growing = false
-	is_wall = false
 	pass
 
 
@@ -36,10 +32,9 @@ func body_is_wall(body):
 
 
 func _on_Area_body_entered( body ):
-	if (not is_wall):
-		if (body_is_wall(body)):
-			done_growing = true
-			emit_signal("connected_wall", self, body)
+	if (body_is_wall(body)):
+		done_growing = true
+		emit_signal("connected_wall", self, body)
 		
 		
 
