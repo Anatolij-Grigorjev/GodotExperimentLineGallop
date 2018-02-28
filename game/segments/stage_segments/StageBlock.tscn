@@ -1,26 +1,22 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://segments/stage_segment/cloudy_block.png" type="Texture" id=1]
-[ext_resource path="res://segments/stage_segment/StageSegment.gd" type="Script" id=2]
+[ext_resource path="res://segments/stage_segments/cloudy_block.png" type="Texture" id=1]
 
 [sub_resource type="RectangleShape2D" id=1]
 
 custom_solver_bias = 0.0
-extents = Vector2( 98, 32 )
+extents = Vector2( 32, 32 )
 _sections_unfolded = [ "Resource" ]
 
-[node name="StageSegment" type="Sprite"]
+[node name="StageBlock" type="Sprite"]
 
-position = Vector2( 98, 32 )
 texture = ExtResource( 1 )
 region_enabled = true
-region_rect = Rect2( 0, 0, 192, 64 )
-script = ExtResource( 2 )
+region_rect = Rect2( 0, 0, 64, 64 )
 _sections_unfolded = [ "Region", "Transform", "Visibility" ]
 __meta__ = {
 "_edit_horizontal_guides_": [  ]
 }
-line_width = 3
 
 [node name="Area" type="StaticBody2D" parent="." index="0"]
 

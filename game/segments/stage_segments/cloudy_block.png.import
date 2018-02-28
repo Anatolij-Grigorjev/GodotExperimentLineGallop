@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/cloudy_block.png-18c2196253b173fdb7a18f6f0457d0a5.stex"
+path="res://.import/cloudy_block.png-0458b57fd5525cc01b8105ff48bc77ff.stex"
 
 [deps]
 
-source_file="res://segments/stage_segment/cloudy_block.png"
+source_file="res://segments/stage_segments/cloudy_block.png"
 source_md5="214f1101ec4185af8652833d92bfb186"
 
-dest_files=[ "res://.import/cloudy_block.png-18c2196253b173fdb7a18f6f0457d0a5.stex" ]
-dest_md5="d0c72e2c721f299a89cc534e8d8d4608"
+dest_files=[ "res://.import/cloudy_block.png-0458b57fd5525cc01b8105ff48bc77ff.stex" ]
+dest_md5="2f8cad2194cf4b9084a0d7ae0ab6515a"
 
 [params]
 

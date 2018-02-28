@@ -1,12 +1,12 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://stages/TestStage.gd" type="Script" id=1]
 [ext_resource path="res://player/PlayerCharacter.tscn" type="PackedScene" id=2]
-[ext_resource path="res://segments/stage_segment/StageSegment.tscn" type="PackedScene" id=3]
+[ext_resource path="res://segments/stage_segments/Stage3Corner.tscn" type="PackedScene" id=3]
+[ext_resource path="res://segments/stage_segments/Stage3Straight.tscn" type="PackedScene" id=4]
 
 [node name="TestStage" type="Node2D" index="0"]
 
-position = Vector2( 29.7706, 84.2339 )
 script = ExtResource( 1 )
 _sections_unfolded = [ "Transform" ]
 
@@ -14,66 +14,93 @@ _sections_unfolded = [ "Transform" ]
 
 position = Vector2( 263.912, 153.722 )
 
-[node name="Segments" type="Node2D" parent="." index="1"]
+[node name="StageBlocks" type="Node2D" parent="." index="1"]
 
 _sections_unfolded = [ "Transform", "Visibility" ]
 
-[node name="StageSegment" parent="Segments" index="0" instance=ExtResource( 3 )]
+[node name="Stage3Corner" parent="StageBlocks" index="0" instance=ExtResource( 3 )]
 
-position = Vector2( 58.033, 120.251 )
+position = Vector2( 32, 32 )
 rotation = 1.5708
+_sections_unfolded = [ "Transform" ]
 
-[node name="StageSegment2" parent="Segments" index="1" instance=ExtResource( 3 )]
+[node name="Stage3Corner2" parent="StageBlocks" index="1" instance=ExtResource( 3 )]
 
-position = Vector2( 126.052, -15.786 )
-rotation = -3.14065
+position = Vector2( 1000, 34 )
+rotation = 3.14159
+_sections_unfolded = [ "Transform" ]
 
-[node name="StageSegment3" parent="Segments" index="2" instance=ExtResource( 3 )]
+[node name="Stage3Corner3" parent="StageBlocks" index="2" instance=ExtResource( 3 )]
 
-position = Vector2( 196.791, 435.858 )
-rotation = 0.00627565
-line_width = 4
+position = Vector2( 1000, 568 )
+rotation = 4.71239
+_sections_unfolded = [ "Transform" ]
 
-[node name="StageSegment4" parent="Segments" index="3" instance=ExtResource( 3 )]
+[node name="Stage3Corner4" parent="StageBlocks" index="3" instance=ExtResource( 3 )]
 
-position = Vector2( 419.892, 431.777 )
-line_width = 5
+position = Vector2( 32, 568 )
+_sections_unfolded = [ "Transform" ]
 
-[node name="StageSegment5" parent="Segments" index="4" instance=ExtResource( 3 )]
+[node name="Stage3Straight" parent="StageBlocks" index="4" instance=ExtResource( 4 )]
 
-position = Vector2( 62.1141, 312.064 )
+position = Vector2( 803.378, 569.059 )
+
+[node name="Stage3Straight12" parent="StageBlocks" index="5" instance=ExtResource( 4 )]
+
+position = Vector2( 805.048, 36.2717 )
+
+[node name="Stage3Straight2" parent="StageBlocks" index="6" instance=ExtResource( 4 )]
+
+position = Vector2( 610.902, 566.27 )
+
+[node name="Stage3Straight9" parent="StageBlocks" index="7" instance=ExtResource( 4 )]
+
+position = Vector2( 612.572, 33.4822 )
+
+[node name="Stage3Straight3" parent="StageBlocks" index="8" instance=ExtResource( 4 )]
+
+position = Vector2( 419.509, 563.48 )
+scale = Vector2( 0.966164, 1 )
+
+[node name="Stage3Straight10" parent="StageBlocks" index="9" instance=ExtResource( 4 )]
+
+position = Vector2( 421.179, 30.6927 )
+scale = Vector2( 0.966164, 1 )
+
+[node name="Stage3Straight5" parent="StageBlocks" index="10" instance=ExtResource( 4 )]
+
+position = Vector2( 30.3567, 379.76 )
 rotation = 1.5708
+scale = Vector2( 0.966164, 1 )
+_sections_unfolded = [ "Transform" ]
 
-[node name="StageSegment6" parent="Segments" index="5" instance=ExtResource( 3 )]
+[node name="Stage3Straight6" parent="StageBlocks" index="11" instance=ExtResource( 4 )]
 
-position = Vector2( 322.616, -13.8554 )
-rotation = 0.0203623
+position = Vector2( 30.3567, 216.083 )
+rotation = 1.5708
+scale = Vector2( 0.966164, 1 )
+_sections_unfolded = [ "Transform" ]
 
-[node name="StageSegment7" parent="Segments" index="6" instance=ExtResource( 3 )]
+[node name="Stage3Straight7" parent="StageBlocks" index="12" instance=ExtResource( 4 )]
 
-position = Vector2( 650.985, 437.316 )
-rotation = -0.0364598
-_sections_unfolded = [ "Animation", "Offset", "Region", "Transform", "Visibility" ]
-line_width = 5
+position = Vector2( 997.391, 214.413 )
+rotation = 1.5708
+scale = Vector2( 0.966164, 1 )
+_sections_unfolded = [ "Transform" ]
 
-[node name="StageSegment8" parent="Segments" index="7" instance=ExtResource( 3 )]
+[node name="Stage3Straight8" parent="StageBlocks" index="13" instance=ExtResource( 4 )]
 
-position = Vector2( 521.17, -12.8345 )
-rotation = -0.0315227
+position = Vector2( 997.391, 379.76 )
+rotation = 1.5708
+scale = Vector2( 0.966164, 1 )
+_sections_unfolded = [ "Transform" ]
 
-[node name="StageSegment9" parent="Segments" index="8" instance=ExtResource( 3 )]
+[node name="Stage3Straight4" parent="StageBlocks" index="14" instance=ExtResource( 4 )]
 
-position = Vector2( 733.306, -1.34124 )
-rotation = 0.383609
+position = Vector2( 229.859, 566.821 )
 
-[node name="StageSegment10" parent="Segments" index="9" instance=ExtResource( 3 )]
+[node name="Stage3Straight11" parent="StageBlocks" index="15" instance=ExtResource( 4 )]
 
-position = Vector2( 812.847, 358.214 )
-rotation = 1.62387
-
-[node name="StageSegment11" parent="Segments" index="10" instance=ExtResource( 3 )]
-
-position = Vector2( 810.254, 168.936 )
-rotation = 1.52455
+position = Vector2( 231.529, 34.0331 )
 
 

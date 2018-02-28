@@ -24,14 +24,7 @@ var orientation_LR = true
 #i the character firing a line right now? cant move and flip cannons
 var is_firing_line = false
 
-#fire segment scene
-var segment_fire_packed = preload("res://segments/fire_segment/FireSegment.tscn")
 
-#wall scene
-var segment_stage_packed = preload("res://segments/stage_segment/StageSegment.tscn")
-
-#fire texture, to set for wall
-var fire_texture = preload("res://segments/fire_segment/fire_block.png")
 
 enum LINE_ORIENTATIONS {
 	LO_LEFT = 180,
@@ -57,8 +50,6 @@ onready var point_segment_transform = {
 }
 
 
-#when wall was added, inform level
-signal wall_created(wall)
 
 func _ready():
 	
@@ -138,7 +129,7 @@ func _process(delta):
 				
 				
 				for point in [point_side_a, point_side_b]:
-					make_line_at_point(segment_fire_packed, point)
+					pass
 				pass
 			else:
 				#cancel lines
@@ -148,45 +139,11 @@ func _process(delta):
 	
 	pass
 	
-func expand_curr_lines():
-	#account for stopped firing before timeout
-	if (is_firing_line):
-		for line in curr_lines():
-			if (not line.done_growing):
-				line.resize_line(line.line_width + 1)
-				add_line_position_unit(line)
-		$ExpandTimer.wait_time = SEGMENT_COOLDOWN_SEC
-		$ExpandTimer.start()
 	
 
 func curr_lines():
 	return get_tree().get_nodes_in_group(GROUP_CURR_LINES)
 
-
-func make_line_at_point(packed_line, point):
-	var line = packed_line.instance()
-	line.position = point.position
-	#transform line appearnce as required
-	if (point_segment_transform.has(point)):
-		var transform = point_segment_transform[point]
-		if (transform.has("rotate")):
-			line.rotation_degrees = transform["rotate"]
-		if (transform.has("flip_v")):
-			line.flip_v = transform["flip_v"]
-		
-	add_child(line)
-	#set initial line size
-	line.resize_line(1)
-	add_line_position_unit(line)
-	line.add_to_group(GROUP_CURR_LINES)
-	line.connect("connected_wall", self, "line_connected")
-
-	
-func add_line_position_unit(line):
-	if (orientation_LR):
-		line.position.x += (line.unit_size.x / 2) * sign(line.position.x)
-	else:
-		line.position.y += (line.unit_size.y / 2) * sign(line.position.y)
 
 func set_elem_idx(var new_idx):
 	#clamp new idx just in case
@@ -209,23 +166,8 @@ func all_lines_grown():
 func line_connected(line, wall):
 	var lines_done = all_lines_grown()
 	if (lines_done):
-		#finish new wall segment
-		var lines = curr_lines()
-		var connect_point_1 = get_line_connect_point(lines[0])
-		var connect_point_2 = get_line_connect_point(lines[1])
 		
-		#create the new line to add
-		var parent = get_parent().get_node("Segments")
-		var new_wall = AbstractSegment.create_segment_at_points(
-		parent,
-		segment_stage_packed,
-		fire_texture, 
-		connect_point_1, 
-		connect_point_2,
-		orientation_LR)
 		
-		#tell level about it
-		emit_signal("wall_created", new_wall)
 		
 		#stop firing lines
 		stop_firing()
@@ -234,23 +176,7 @@ func line_connected(line, wall):
 	
 #find global position of line business end	
 func get_line_connect_point(line):
-	var middle = line.global_position
-	var half_length = line.unit_size.x * line.line_width * 0.5
-	
-	if (line.rotation_degrees == LO_RIGHT):
-		return Vector2(middle.x + half_length, middle.y)
-		
-	if (line.rotation_degrees == LO_BOTTOM):
-		return Vector2(middle.x, middle.y + half_length)
-		
-	if (line.rotation_degrees == LO_LEFT):
-		return Vector2(middle.x - half_length, middle.y)
-		
-	if (line.rotation_degrees == LO_TOP):
-		return Vector2(middle.x, middle.y - half_length)
-	else:
-		print("weird rotation %s for line %s!" % [line.rotation_degrees, line])
-		breakpoint
+	pass
 		
 		
 	
