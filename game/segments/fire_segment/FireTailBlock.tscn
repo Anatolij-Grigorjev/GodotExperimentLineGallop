@@ -7,12 +7,12 @@
 custom_solver_bias = 0.0
 extents = Vector2( 16, 16 )
 
-[node name="FireGrowBlock" type="Sprite" index="0"]
+[node name="FireGrowBlock" type="Sprite"]
 
 texture = ExtResource( 1 )
 region_enabled = true
 region_rect = Rect2( 0, 0, 32, 32 )
-_sections_unfolded = [ "Offset", "Region", "Transform" ]
+_sections_unfolded = [ "Offset", "Region", "Transform", "Visibility" ]
 
 [node name="Area" type="Area2D" parent="." index="0"]
 

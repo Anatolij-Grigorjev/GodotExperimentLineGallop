@@ -6,8 +6,8 @@ onready var G = get_node("/root/Globals")
 onready var AbstractSegment = preload("res://segments/AbstractSegment.gd")
 
 const SPEED = 200
-const GROUP_CURR_LINES = "curr_lines"
-const SEGMENT_COOLDOWN_SEC = 1.0
+const GROUP_CURR_GROWERS = "curr_growers"
+const SEGMENT_COOLDOWN_SEC = 0.5
 
 var curr_mouse_pos
 
@@ -24,8 +24,6 @@ var orientation_LR = true
 #i the character firing a line right now? cant move and flip cannons
 var is_firing_line = false
 
-
-
 enum LINE_ORIENTATIONS {
 	LO_LEFT = 180,
 	LO_TOP = 270,
@@ -33,20 +31,31 @@ enum LINE_ORIENTATIONS {
 	LO_BOTTOM = 90
 }
 
+const SCALE_FLIP_V = Vector2(1, -1)
 
 onready var point_segment_transform = {
-	
+	$MainBall/POSHRight: {
+			"growth_vector": Vector2(1, 0)
+		},
 	$MainBall/POSVTop: {
 			"rotate": LO_TOP,
-			"flip_v": true
+			"scale": SCALE_FLIP_V,
+			"growth_vector": Vector2(0, -1)
 		},
 	$MainBall/POSVBottom: {
-			"rotate": LO_BOTTOM
+			"rotate": LO_BOTTOM,
+			"growth_vector": Vector2(0, 1)
 		},
 	$MainBall/POSHLeft: {
 			"rotate": LO_LEFT,
-			"flip_v": true
+			"scale": SCALE_FLIP_V,
+			"growth_vector": Vector2(-1, 0)
 		}
+}
+
+onready var element_growers = {
+	
+	G.ELEMENTS.FIRE: preload("res://segments/line_growers/FireGrower.tscn")
 }
 
 
@@ -127,9 +136,8 @@ func _process(delta):
 				$ExpandTimer.start()
 				$Animation.play("firing")
 				
-				
 				for point in [point_side_a, point_side_b]:
-					pass
+					make_grower_at_point(point)
 				pass
 			else:
 				#cancel lines
@@ -140,9 +148,35 @@ func _process(delta):
 	pass
 	
 	
+func grow_current_lines():
+	for grower in curr_lines():
+		if (not grower.done_growing):
+			#add one block to grower
+			grower.add_block()
+			var growth_dir = point_segment_transform[grower.get_parent()]["growth_vector"]
+			#move grower to accommodate new block
+			grower.position += (grower.block_size * growth_dir)
+	pass
+	
 
 func curr_lines():
-	return get_tree().get_nodes_in_group(GROUP_CURR_LINES)
+	return get_tree().get_nodes_in_group(GROUP_CURR_GROWERS)
+	
+func make_grower_at_point(point):
+	#get correct grower packed
+	var packed_grower = element_growers[curr_elem_idx]
+	var new_grower = packed_grower.instance()
+	point.add_child(new_grower)
+	new_grower.position = point_segment_transform[point]["growth_vector"] * (new_grower.block_size / 2)
+	#transform grower
+	var transform = point_segment_transform[point]
+	if (transform.has("rotate")):
+		new_grower.rotation_degrees = transform["rotate"]
+	if (transform.has("scale")):
+		new_grower.scale = transform["scale"]
+	
+	new_grower.add_to_group(GROUP_CURR_GROWERS)
+	new_grower.connect("grower_done", self, "line_connected")
 
 
 func set_elem_idx(var new_idx):
@@ -163,7 +197,9 @@ func all_lines_grown():
 			return false
 	return all_done
 	
-func line_connected(line, wall):
+	
+	
+func line_connected(grower, wall):
 	var lines_done = all_lines_grown()
 	if (lines_done):
 		

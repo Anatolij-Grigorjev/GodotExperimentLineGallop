@@ -16,6 +16,7 @@ position = Vector2( 263.912, 153.722 )
 
 [node name="StageBlocks" type="Node2D" parent="." index="1"]
 
+editor/display_folded = true
 _sections_unfolded = [ "Transform", "Visibility" ]
 
 [node name="Stage3Corner" parent="StageBlocks" index="0" instance=ExtResource( 3 )]

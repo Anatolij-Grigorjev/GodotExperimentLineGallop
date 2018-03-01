@@ -185,4 +185,6 @@ wait_time = 1.0
 one_shot = false
 autostart = false
 
+[connection signal="timeout" from="ExpandTimer" to="." method="grow_current_lines"]
+
 
