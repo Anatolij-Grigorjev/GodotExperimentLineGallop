@@ -11,10 +11,7 @@ func _ready():
 
 #only wall has aea as static body
 func body_is_wall( body ):
-	if (body is Sprite):
-		return body.has_node("Area") and body.get_node("Area") is StaticBody2D
-	else:
-		 return false
+	return body is StaticBody2D
 
 
 func collided_body( body ):

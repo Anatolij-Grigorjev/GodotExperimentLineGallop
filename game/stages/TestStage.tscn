@@ -5,7 +5,7 @@
 [ext_resource path="res://segments/stage_segments/Stage3Corner.tscn" type="PackedScene" id=3]
 [ext_resource path="res://segments/stage_segments/Stage3Straight.tscn" type="PackedScene" id=4]
 
-[node name="TestStage" type="Node2D" index="0"]
+[node name="TestStage" type="Node2D"]
 
 script = ExtResource( 1 )
 _sections_unfolded = [ "Transform" ]
@@ -16,7 +16,6 @@ position = Vector2( 263.912, 153.722 )
 
 [node name="StageBlocks" type="Node2D" parent="." index="1"]
 
-editor/display_folded = true
 _sections_unfolded = [ "Transform", "Visibility" ]
 
 [node name="Stage3Corner" parent="StageBlocks" index="0" instance=ExtResource( 3 )]
