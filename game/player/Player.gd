@@ -58,6 +58,9 @@ onready var element_growers = {
 	G.ELEMENTS.FIRE: preload("res://segments/line_growers/FireGrower.tscn")
 }
 
+onready var element_blocks = {
+		G.ELEMENTS.FIRE: preload("res://segments/stage_segments/FireStageBlock.tscn")
+	}
 
 
 func _ready():
@@ -202,6 +205,20 @@ func all_lines_grown():
 func line_connected(grower, wall):
 	var lines_done = all_lines_grown()
 	if (lines_done):
+		var lines = curr_lines()
+		
+		var point1 = lines[0].at_wall_global_pos
+		var point2 = lines[1].at_wall_global_pos
+		
+		var parent = get_parent()
+		
+		AbstractSegment.create_segment_at_points(
+		parent, 
+		element_blocks[curr_elem_idx],
+		point1,
+		point2,
+		(point2 - point1).normalized(),
+		16)
 		
 		
 		

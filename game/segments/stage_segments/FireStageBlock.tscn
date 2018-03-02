@@ -1,19 +1,19 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://segments/stage_segments/cloudy_block.png" type="Texture" id=1]
+[ext_resource path="res://segments/fire_segment/fire_block.png" type="Texture" id=1]
 
 [sub_resource type="RectangleShape2D" id=1]
 
 custom_solver_bias = 0.0
-extents = Vector2( 32, 32 )
+extents = Vector2( 16, 16 )
 _sections_unfolded = [ "Resource" ]
 
 [node name="StageBlock" type="Sprite"]
 
 texture = ExtResource( 1 )
 region_enabled = true
-region_rect = Rect2( 0, 0, 64, 64 )
-_sections_unfolded = [ "Animation", "Region", "Transform", "Visibility" ]
+region_rect = Rect2( 0, 0, 32, 32 )
+_sections_unfolded = [ "Region", "Transform", "Visibility" ]
 __meta__ = {
 "_edit_horizontal_guides_": [  ]
 }

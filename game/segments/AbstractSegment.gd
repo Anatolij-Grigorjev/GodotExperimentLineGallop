@@ -15,36 +15,27 @@ func change_texture(texture):
 	
 #function to create a segment that will be treated as a wall
 #this is why a wall prefab is used with separate texture to set
-static func create_segment_at_points(parent, packed_wall, line_texture, point_from, point_to, is_horizontal):
+static func create_segment_at_points(parent, packed_wall, point_from, point_to, direction, unit_size):
 	
 	var mid_point = (point_from + point_to) / 2
 	var diff_v = point_from - point_to
 	var diff = max(abs(diff_v.x), abs(diff_v.y))
-	var segment = create_add_segment(parent, packed_wall, line_texture)
-	segment.global_position = mid_point
+	var units = int(round(max(diff / unit_size, diff / unit_size)))
 	
-	var units = int(round(max(diff / segment.unit_size.x, diff / segment.unit_size.y)))
-	segment.resize_line(units)
+	var offset = direction * unit_size
 	
-#	var line_area = segment.get_node("Area")
-#	var line_collider = line_area.get_node("Collider")
-#	line_collider.one_way_collision = false
-#	if (not is_horizontal):
-#		line_collider.shape.extents = Vector2(segment.unit_size.x / 2 * units, segment.unit_size.y / 2)
-#	else:
-#		line_collider.shape.extents = Vector2(segment.unit_size.x / 2, segment.unit_size.y / 2 * units)
+	var line_parent = Node2D.new()
+	parent.add_child(line_parent)
+	line_parent.global_position = mid_point
+	
+	for idx in range(-units / 2, units / 2):
+		
+		var block = packed_wall.instance()
+		line_parent.add_child(block)
+		block.position = Vector2() + idx * offset
 	
 	#return created line
-	return segment
-
-
-static func create_add_segment(parent, packed_wall, line_texture):
-	
-	var line = packed_wall.instance()
-	line.change_texture(line_texture)
-	parent.add_child(line)
-	
-	return line
+	return line_parent
 	
 	
 	
