@@ -119,7 +119,7 @@ func _process(delta):
 	if (Input.is_action_just_released("cycle_elements") and not is_firing_line):
 		set_elem_idx(curr_elem_idx + 1)
 	
-	var flip_gun_playing = $Animation.current_animation == "flip_line_gun" and $Animation.is_playing()
+	var flip_gun_playing = $Animation.current_animation == "rotate_cannons" and $Animation.is_playing()
 	
 	#only do these things when cannons arent moving
 	if (not flip_gun_playing):
@@ -220,6 +220,8 @@ func line_connected(grower, wall):
 		(point2 - point1).normalized(),
 		16)
 		
+		#create a static body line that will remain in the stage
+		#tell stage about it via signal
 		
 		
 		#stop firing lines
