@@ -218,7 +218,7 @@ func line_connected(grower, wall):
 		point1,
 		point2,
 		(point2 - point1).normalized(),
-		16)
+		32)
 		
 		#create a static body line that will remain in the stage
 		#tell stage about it via signal
