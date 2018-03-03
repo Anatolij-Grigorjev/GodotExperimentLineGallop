@@ -63,6 +63,9 @@ onready var element_blocks = {
 	}
 
 
+signal wall_ready(wall, is_horizontal)
+
+
 func _ready():
 	
 	$ExpandTimer.wait_time = SEGMENT_COOLDOWN_SEC
@@ -212,17 +215,18 @@ func line_connected(grower, wall):
 		
 		var parent = get_parent()
 		
-		AbstractSegment.create_segment_at_points(
+		#create a static body line that will remain in the stage
+		var line_parent = AbstractSegment.create_segment_at_points(
 		parent, 
 		element_blocks[curr_elem_idx],
 		point1,
 		point2,
 		(point2 - point1).normalized(),
 		32)
+		 
 		
-		#create a static body line that will remain in the stage
 		#tell stage about it via signal
-		
+		emit_signal("wall_ready", line_parent, orientation_LR)
 		
 		#stop firing lines
 		stop_firing()

@@ -7,5 +7,10 @@ extends Node2D
 func _ready():
 	
 
+	$Character.connect("wall_ready", self, "got_wall")
 	
+	pass
+	
+	
+func got_wall(wall, is_horizontal):
 	pass

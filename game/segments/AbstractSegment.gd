@@ -40,7 +40,7 @@ static func create_segment_at_points(parent, packed_wall, point_from, point_to, 
 		
 		var block = packed_wall.instance()
 		line_parent.add_child(block)
-		block.position = Vector2() + (idx + 1) * offset
+		block.position = Vector2() + idx * offset
 	
 	#return created line
 	return line_parent
