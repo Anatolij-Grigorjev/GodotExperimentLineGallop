@@ -16,7 +16,6 @@ position = Vector2( 263.912, 153.722 )
 
 [node name="StageBlocks" type="Node2D" parent="." index="1"]
 
-editor/display_folded = true
 _sections_unfolded = [ "Transform", "Visibility" ]
 
 [node name="Stage3Corner" parent="StageBlocks" index="0" instance=ExtResource( 3 )]
@@ -25,11 +24,31 @@ position = Vector2( 32, 32 )
 rotation = 1.5708
 _sections_unfolded = [ "Transform" ]
 
+[node name="StageBlock" parent="StageBlocks/Stage3Corner" index="0"]
+
+polygon_order = 1
+
+[node name="StageBlock3" parent="StageBlocks/Stage3Corner" index="2"]
+
+polygon_order = 47
+
 [node name="Stage3Corner2" parent="StageBlocks" index="1" instance=ExtResource( 3 )]
 
 position = Vector2( 1000, 34 )
 rotation = 3.14159
 _sections_unfolded = [ "Transform" ]
+
+[node name="StageBlock" parent="StageBlocks/Stage3Corner2" index="0"]
+
+polygon_order = 16
+
+[node name="StageBlock2" parent="StageBlocks/Stage3Corner2" index="1"]
+
+polygon_order = 15
+
+[node name="StageBlock3" parent="StageBlocks/Stage3Corner2" index="2"]
+
+polygon_order = 14
 
 [node name="Stage3Corner3" parent="StageBlocks" index="2" instance=ExtResource( 3 )]
 
@@ -37,36 +56,132 @@ position = Vector2( 1000, 568 )
 rotation = 4.71239
 _sections_unfolded = [ "Transform" ]
 
+[node name="StageBlock" parent="StageBlocks/Stage3Corner3" index="0"]
+
+polygon_order = 25
+
+[node name="StageBlock2" parent="StageBlocks/Stage3Corner3" index="1"]
+
+polygon_order = 24
+
+[node name="StageBlock3" parent="StageBlocks/Stage3Corner3" index="2"]
+
+polygon_order = 23
+
 [node name="Stage3Corner4" parent="StageBlocks" index="3" instance=ExtResource( 3 )]
 
 position = Vector2( 32, 568 )
 _sections_unfolded = [ "Transform" ]
 
+[node name="StageBlock" parent="StageBlocks/Stage3Corner4" index="0"]
+
+polygon_order = 40
+
+[node name="StageBlock2" parent="StageBlocks/Stage3Corner4" index="1"]
+
+polygon_order = 39
+
+[node name="StageBlock3" parent="StageBlocks/Stage3Corner4" index="2"]
+
+polygon_order = 38
+
 [node name="Stage3Straight" parent="StageBlocks" index="4" instance=ExtResource( 4 )]
 
 position = Vector2( 803.378, 569.059 )
+
+[node name="StageBlock" parent="StageBlocks/Stage3Straight" index="0"]
+
+polygon_order = 28
+
+[node name="StageBlock2" parent="StageBlocks/Stage3Straight" index="1"]
+
+polygon_order = 27
+
+[node name="StageBlock3" parent="StageBlocks/Stage3Straight" index="2"]
+
+polygon_order = 26
 
 [node name="Stage3Straight12" parent="StageBlocks" index="5" instance=ExtResource( 4 )]
 
 position = Vector2( 805.048, 36.2717 )
 
+[node name="StageBlock" parent="StageBlocks/Stage3Straight12" index="0"]
+
+polygon_order = 11
+
+[node name="StageBlock2" parent="StageBlocks/Stage3Straight12" index="1"]
+
+polygon_order = 12
+
+[node name="StageBlock3" parent="StageBlocks/Stage3Straight12" index="2"]
+
+polygon_order = 13
+
 [node name="Stage3Straight2" parent="StageBlocks" index="6" instance=ExtResource( 4 )]
 
 position = Vector2( 610.902, 566.27 )
 
+[node name="StageBlock" parent="StageBlocks/Stage3Straight2" index="0"]
+
+polygon_order = 31
+
+[node name="StageBlock2" parent="StageBlocks/Stage3Straight2" index="1"]
+
+polygon_order = 30
+
+[node name="StageBlock3" parent="StageBlocks/Stage3Straight2" index="2"]
+
+polygon_order = 29
+
 [node name="Stage3Straight9" parent="StageBlocks" index="7" instance=ExtResource( 4 )]
 
-position = Vector2( 612.572, 33.4822 )
+position = Vector2( 613.911, 33.4822 )
+
+[node name="StageBlock" parent="StageBlocks/Stage3Straight9" index="0"]
+
+polygon_order = 8
+
+[node name="StageBlock2" parent="StageBlocks/Stage3Straight9" index="1"]
+
+polygon_order = 9
+
+[node name="StageBlock3" parent="StageBlocks/Stage3Straight9" index="2"]
+
+polygon_order = 10
 
 [node name="Stage3Straight3" parent="StageBlocks" index="8" instance=ExtResource( 4 )]
 
 position = Vector2( 419.509, 563.48 )
 scale = Vector2( 0.966164, 1 )
 
+[node name="StageBlock" parent="StageBlocks/Stage3Straight3" index="0"]
+
+polygon_order = 34
+
+[node name="StageBlock2" parent="StageBlocks/Stage3Straight3" index="1"]
+
+polygon_order = 33
+
+[node name="StageBlock3" parent="StageBlocks/Stage3Straight3" index="2"]
+
+polygon_order = 32
+
 [node name="Stage3Straight10" parent="StageBlocks" index="9" instance=ExtResource( 4 )]
 
 position = Vector2( 421.179, 30.6927 )
 scale = Vector2( 0.966164, 1 )
+
+[node name="StageBlock" parent="StageBlocks/Stage3Straight10" index="0"]
+
+polygon_order = 5
+
+[node name="StageBlock2" parent="StageBlocks/Stage3Straight10" index="1"]
+
+polygon_order = 6
+
+[node name="StageBlock3" parent="StageBlocks/Stage3Straight10" index="2"]
+
+polygon_order = 7
 
 [node name="Stage3Straight5" parent="StageBlocks" index="10" instance=ExtResource( 4 )]
 
@@ -75,12 +190,36 @@ rotation = 1.5708
 scale = Vector2( 0.966164, 1 )
 _sections_unfolded = [ "Transform" ]
 
+[node name="StageBlock" parent="StageBlocks/Stage3Straight5" index="0"]
+
+polygon_order = 43
+
+[node name="StageBlock2" parent="StageBlocks/Stage3Straight5" index="1"]
+
+polygon_order = 42
+
+[node name="StageBlock3" parent="StageBlocks/Stage3Straight5" index="2"]
+
+polygon_order = 41
+
 [node name="Stage3Straight6" parent="StageBlocks" index="11" instance=ExtResource( 4 )]
 
 position = Vector2( 30.3567, 216.083 )
 rotation = 1.5708
 scale = Vector2( 0.966164, 1 )
 _sections_unfolded = [ "Transform" ]
+
+[node name="StageBlock" parent="StageBlocks/Stage3Straight6" index="0"]
+
+polygon_order = 46
+
+[node name="StageBlock2" parent="StageBlocks/Stage3Straight6" index="1"]
+
+polygon_order = 45
+
+[node name="StageBlock3" parent="StageBlocks/Stage3Straight6" index="2"]
+
+polygon_order = 44
 
 [node name="Stage3Straight7" parent="StageBlocks" index="12" instance=ExtResource( 4 )]
 
@@ -89,6 +228,18 @@ rotation = 1.5708
 scale = Vector2( 0.966164, 1 )
 _sections_unfolded = [ "Transform" ]
 
+[node name="StageBlock" parent="StageBlocks/Stage3Straight7" index="0"]
+
+polygon_order = 17
+
+[node name="StageBlock2" parent="StageBlocks/Stage3Straight7" index="1"]
+
+polygon_order = 18
+
+[node name="StageBlock3" parent="StageBlocks/Stage3Straight7" index="2"]
+
+polygon_order = 19
+
 [node name="Stage3Straight8" parent="StageBlocks" index="13" instance=ExtResource( 4 )]
 
 position = Vector2( 997.391, 379.76 )
@@ -96,12 +247,64 @@ rotation = 1.5708
 scale = Vector2( 0.966164, 1 )
 _sections_unfolded = [ "Transform" ]
 
+[node name="StageBlock" parent="StageBlocks/Stage3Straight8" index="0"]
+
+polygon_order = 20
+
+[node name="StageBlock2" parent="StageBlocks/Stage3Straight8" index="1"]
+
+polygon_order = 21
+
+[node name="StageBlock3" parent="StageBlocks/Stage3Straight8" index="2"]
+
+polygon_order = 22
+
 [node name="Stage3Straight4" parent="StageBlocks" index="14" instance=ExtResource( 4 )]
 
 position = Vector2( 229.859, 566.821 )
+
+[node name="StageBlock" parent="StageBlocks/Stage3Straight4" index="0"]
+
+polygon_order = 37
+
+[node name="StageBlock2" parent="StageBlocks/Stage3Straight4" index="1"]
+
+polygon_order = 36
+
+[node name="StageBlock3" parent="StageBlocks/Stage3Straight4" index="2"]
+
+polygon_order = 35
 
 [node name="Stage3Straight11" parent="StageBlocks" index="15" instance=ExtResource( 4 )]
 
 position = Vector2( 231.529, 34.0331 )
 
+[node name="StageBlock" parent="StageBlocks/Stage3Straight11" index="0"]
 
+polygon_order = 2
+
+[node name="StageBlock2" parent="StageBlocks/Stage3Straight11" index="1"]
+
+polygon_order = 3
+
+[node name="StageBlock3" parent="StageBlocks/Stage3Straight11" index="2"]
+
+polygon_order = 4
+
+
+[editable path="StageBlocks/Stage3Corner"]
+[editable path="StageBlocks/Stage3Corner2"]
+[editable path="StageBlocks/Stage3Corner3"]
+[editable path="StageBlocks/Stage3Corner4"]
+[editable path="StageBlocks/Stage3Straight"]
+[editable path="StageBlocks/Stage3Straight12"]
+[editable path="StageBlocks/Stage3Straight2"]
+[editable path="StageBlocks/Stage3Straight9"]
+[editable path="StageBlocks/Stage3Straight3"]
+[editable path="StageBlocks/Stage3Straight10"]
+[editable path="StageBlocks/Stage3Straight5"]
+[editable path="StageBlocks/Stage3Straight6"]
+[editable path="StageBlocks/Stage3Straight7"]
+[editable path="StageBlocks/Stage3Straight8"]
+[editable path="StageBlocks/Stage3Straight4"]
+[editable path="StageBlocks/Stage3Straight11"]
