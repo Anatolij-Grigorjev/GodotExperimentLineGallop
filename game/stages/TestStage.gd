@@ -8,6 +8,14 @@ var largest_empty_area
 
 var stage_blocks = []
 
+var current_block_idx = 0
+var highlight_color = Color(1.0, 1.0, 0.1)
+
+var highlight_time = 0.25
+var current_highlight_time = 0.0
+
+var is_highlighting = false
+
 func _ready():
 	
 	#calculate the whole area as largest empty
@@ -18,10 +26,22 @@ func _ready():
 	stage_blocks.sort_custom(self, "sort_by_poly_order")
 	largest_empty_area = calc_poly_area(stage_blocks)
 	
+	#bake poly?
+	var polygon = Polygon2D.new()
+	add_child(polygon)
+	polygon.polygon = []
+	for block in stage_blocks:
+		polygon.polygon.append(block.global_position)
+	polygon.color = highlight_color
+	
+	for child in get_children():
+		print("child: %s" % child)
+	
 	print("largest poly area: %s" % largest_empty_area)
 	
 	$Character.connect("wall_ready", self, "got_wall")
 	
+	set_process(true)
 	pass
 
 
@@ -53,6 +73,31 @@ func calc_poly_area(polygon_nodes):
 	return abs(total_area)
 	
 
+func _process(delta):
+	
+	if (not is_highlighting):
+		#start highlight process
+		if (Input.is_action_just_released("ui_accept")):
+			is_highlighting = true
+	else:
+		#wait for highlight expry
+		if (current_highlight_time > 0):
+			current_highlight_time -= delta
+		else:
+			#highlight next block
+			if (current_block_idx < stage_blocks.size()):
+				print("%s: %s" % [current_block_idx, stage_blocks[current_block_idx].global_position])
+				stage_blocks[current_block_idx].modulate = highlight_color
+				if (current_block_idx > 0):
+					stage_blocks[current_block_idx - 1].modulate = Color(1.0, 1.0, 1.0)
+				current_block_idx += 1
+				current_highlight_time = highlight_time
+			#all blocks done, finish highlight
+			else:
+				stage_blocks[current_block_idx - 1].modulate = Color(1.0, 1.0, 1.0)
+				current_block_idx = 0
+				is_highlighting = false
+				
 
 	
 func got_wall(wall, is_horizontal):
