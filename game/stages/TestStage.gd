@@ -1,12 +1,11 @@
 extends Node2D
 
-# class member variables go here, for example:
-# var a = 2
-# var b = "textvar"
+onready var G = get_node("/root/Globals")
 
 var largest_empty_area
 
 var stage_blocks = []
+var stage_blocks_hash = {}
 
 var current_block_idx = 0
 var highlight_color = Color(1.0, 1.0, 0.1)
@@ -29,13 +28,12 @@ func _ready():
 	#bake poly?
 	var polygon = Polygon2D.new()
 	add_child(polygon)
-	polygon.polygon = []
+	var poly_points = []
 	for block in stage_blocks:
-		polygon.polygon.append(block.global_position)
-	polygon.color = highlight_color
+		poly_points.append(block.global_position)
+	polygon.color = G.COLOR_TRANSPEARANT
+	polygon.polygon = PoolVector2Array(poly_points)
 	
-	for child in get_children():
-		print("child: %s" % child)
 	
 	print("largest poly area: %s" % largest_empty_area)
 	
@@ -100,5 +98,12 @@ func _process(delta):
 				
 
 	
-func got_wall(wall, is_horizontal):
+func got_wall(wall, point_block_A, point_block_B, is_horizontal):
+	
+	#get correct blocks by polygon order since it made sorted array
+	var block_a_idx = point_block_A.polygon_order
+	var block_b_idx = point_block_B.polygon_order
+	
+	
+	
 	pass

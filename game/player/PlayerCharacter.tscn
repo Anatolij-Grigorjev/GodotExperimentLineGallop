@@ -88,7 +88,7 @@ tracks/3/keys = {
 "values": [ Vector2( -55, 0 ), Vector2( 0, -55 ) ]
 }
 
-[node name="Character" type="KinematicBody2D"]
+[node name="Character" type="KinematicBody2D" index="0"]
 
 input_pickable = true
 collision_layer = 1
@@ -99,7 +99,6 @@ _sections_unfolded = [ "Transform" ]
 
 [node name="MainBall" type="Sprite" parent="." index="0"]
 
-editor/display_folded = true
 texture = ExtResource( 2 )
 
 [node name="Core" type="Sprite" parent="MainBall" index="0"]

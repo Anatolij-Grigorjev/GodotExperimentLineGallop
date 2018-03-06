@@ -15,6 +15,7 @@ var ELEM_COLORS = {
 	WIND: Color(0.019, 0.988, 0.196)
 }
 
+var COLOR_TRANSPEARANT = Color(1.0, 1.0, 1.0, 0.0)
 
 
 func _ready():

@@ -63,7 +63,7 @@ onready var element_blocks = {
 	}
 
 
-signal wall_ready(wall, is_horizontal)
+signal wall_ready(wall, point_block_A, point_block_B, is_horizontal)
 
 
 func _ready():
@@ -208,25 +208,27 @@ func all_lines_grown():
 func line_connected(grower, wall):
 	var lines_done = all_lines_grown()
 	if (lines_done):
-		var lines = curr_lines()
 		
-		var point1 = lines[0].at_wall_global_pos
-		var point2 = lines[1].at_wall_global_pos
+		var growerA = point_side_a.get_child(0)
+		var growerB = point_side_b.get_child(0)
+		
+		var point1 = growerA.at_wall_global_pos
+		var point2 = growerB.at_wall_global_pos
 		
 		var parent = get_parent()
 		
 		#create a static body line that will remain in the stage
 		var line_parent = AbstractSegment.create_segment_at_points(
-		parent, 
-		element_blocks[curr_elem_idx],
-		point1,
-		point2,
-		(point2 - point1).normalized(),
-		32)
+		parent, #parent
+		element_blocks[curr_elem_idx], #packed wall block
+		point1, #point from
+		point2, #point to
+		(point2 - point1).normalized(), #line direction
+		32) #size of single block
 		 
 		
 		#tell stage about it via signal
-		emit_signal("wall_ready", line_parent, orientation_LR)
+		emit_signal("wall_ready", line_parent, growerA.wall_node, growerB.wall_node, orientation_LR)
 		
 		#stop firing lines
 		stop_firing()

@@ -11,6 +11,7 @@ var done_growing
 signal grower_done(grower, wall)
 
 var at_wall_global_pos = null
+var wall_node = null
 
 func _ready():
 	
@@ -26,6 +27,7 @@ func _ready():
 func head_reached_wall(wall):
 	done_growing = true
 	at_wall_global_pos = $Head.global_position
+	wall_node = wall
 	
 	emit_signal("grower_done", self, wall)
 	
