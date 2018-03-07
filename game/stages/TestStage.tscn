@@ -16,7 +16,6 @@ position = Vector2( 263.912, 153.722 )
 
 [node name="StageBlocks" type="Node2D" parent="." index="1"]
 
-editor/display_folded = true
 _sections_unfolded = [ "Transform", "Visibility" ]
 
 [node name="Stage3Corner" parent="StageBlocks" index="0" instance=ExtResource( 3 )]
@@ -136,7 +135,7 @@ polygon_order = 29
 
 [node name="Stage3Straight9" parent="StageBlocks" index="7" instance=ExtResource( 4 )]
 
-position = Vector2( 613.911, 33.4822 )
+position = Vector2( 612.572, 33.4822 )
 
 [node name="StageBlock" parent="StageBlocks/Stage3Straight9" index="0"]
 
@@ -262,7 +261,7 @@ polygon_order = 22
 
 [node name="Stage3Straight4" parent="StageBlocks" index="14" instance=ExtResource( 4 )]
 
-position = Vector2( 229.859, 566.821 )
+position = Vector2( 229.859, 564.303 )
 
 [node name="StageBlock" parent="StageBlocks/Stage3Straight4" index="0"]
 

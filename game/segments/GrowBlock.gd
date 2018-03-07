@@ -3,6 +3,7 @@ extends Sprite
 
 signal reached_wall(wall)
 
+var sent_signal = false
 
 func _ready():
 	# Called every time the node is added to the scene.
@@ -15,5 +16,6 @@ func body_is_wall( body ):
 
 
 func collided_body( body ):
-	if (body_is_wall(body)):
+	if (body_is_wall(body) and not sent_signal):
 		emit_signal("reached_wall", body)
+		sent_signal = true

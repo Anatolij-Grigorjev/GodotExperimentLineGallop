@@ -228,7 +228,7 @@ func line_connected(grower, wall):
 		 
 		
 		#tell stage about it via signal
-		emit_signal("wall_ready", line_parent, growerA.wall_node, growerB.wall_node, orientation_LR)
+		emit_signal("wall_ready", line_parent, growerA.wall_node.get_parent(), growerB.wall_node.get_parent(), orientation_LR)
 		
 		#stop firing lines
 		stop_firing()
