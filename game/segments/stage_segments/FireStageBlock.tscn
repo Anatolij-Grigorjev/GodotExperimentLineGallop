@@ -9,7 +9,7 @@ custom_solver_bias = 0.0
 extents = Vector2( 16, 16 )
 _sections_unfolded = [ "Resource" ]
 
-[node name="FireStageBlock" type="Sprite" index="0"]
+[node name="FireStageBlock" type="Sprite"]
 
 texture = ExtResource( 1 )
 region_enabled = true

@@ -21,13 +21,13 @@ func _ready():
 	stage_blocks = []
 	init_stage_blocks($StageBlocks)
 	print("found %s blocks currently in the stage!" % stage_blocks.size())
-	#sort points by polygon ordering
-	stage_blocks.sort_custom(self, "sort_by_poly_order")
+	
+	sort_poly_blocks(stage_blocks)
+	
 	largest_empty_area = calc_poly_area(stage_blocks)
 	
 	#bake initial stage poly
-	bake_polygon(stage_blocks)
-	
+	G.bake_polygon(self, stage_blocks)
 	
 	
 	print("largest poly area: %s" % largest_empty_area)
@@ -103,57 +103,47 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 	
 	#create 2 polygons - one with line as one side other as line on other side
 	var poly_blocks = []
+	var poly_idx = 0
 	if (is_horizontal):
 		#polygon below line
 		#start with new wall blocks
-		for idx in range(wall.get_child_count()):
-			var block = wall.get_child(idx)
-			block.polygon_order = idx
-			poly_blocks.append(block)
-		var new_idx = wall.get_child_count()
+		poly_idx = G.add_wall_blocks(poly_blocks, wall, 0)
+		
 		#because cannon A is on the left in this configuration
 		#the idx of that block is higher since the thing goes 
 		#clockwise from topmost block
 		#add blocks below line
-		for idx in range(block_b_idx, block_a_idx + 1):
-			var block = stage_blocks[idx]
-			block.polygon_order = new_idx
-			new_idx += 1
-			block.modulate = highlight_color1
-			poly_blocks.append(block)
+		G.add_from_stage_blocks(poly_blocks, 
+		stage_blocks, 
+		range(block_b_idx, block_a_idx + 1), 
+		poly_idx, 
+		highlight_color1)
 			
-		bake_polygon(poly_blocks, highlight_color1)
+		sort_poly_blocks(poly_blocks)
+		G.bake_polygon(self, poly_blocks, highlight_color1)
 		
 		#polygon above line
 		poly_blocks = []
-		var poly_idx = 0
+		poly_idx = 0
 		var blocks_diff = block_b_idx + (stage_blocks.size() - block_a_idx)
 		#start with blocks above line
 		#actually idx will be culled to use this as a ring
-		for idx in range(block_a_idx, block_a_idx + blocks_diff):
-			var block = stage_blocks[idx % stage_blocks.size()]
-			block.polygon_order = poly_idx
-			poly_idx += 1
-			block.modulate = highlight_color2
-			poly_blocks.append(block)
+		poly_idx = G.add_from_stage_blocks(poly_blocks,
+		stage_blocks,
+		range(block_a_idx + blocks_diff, block_a_idx, -1),
+		0,
+		highlight_color2)
 
 		#add line
-		for block in wall.get_children():
-			block.polygon_order = poly_idx
-			poly_idx += 1
-			poly_blocks.append(block)
-
-		bake_polygon(poly_blocks, highlight_color2)
+		poly_idx = G.add_wall_blocks(poly_blocks, wall, poly_idx)
+		
+		sort_poly_blocks(poly_blocks)
+		G.bake_polygon(self, poly_blocks, highlight_color2)
 		
 	pass
 	
-func bake_polygon(blocks, color = G.COLOR_TRANSPEARANT):
-	var polygon = Polygon2D.new()
-	add_child(polygon)
-	var poly_points = []
-	for block in blocks:
-		poly_points.append(block.global_position)
-	polygon.color = color
-	polygon.polygon = PoolVector2Array(poly_points)
 	
-	return polygon
+
+func sort_poly_blocks(blocks):
+	#sort points by polygon ordering
+	blocks.sort_custom(self, "sort_by_poly_order")
