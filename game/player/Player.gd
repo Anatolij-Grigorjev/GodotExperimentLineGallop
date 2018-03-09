@@ -24,6 +24,9 @@ var orientation_LR = true
 #i the character firing a line right now? cant move and flip cannons
 var is_firing_line = false
 
+#half height of texture to push out of line when its done
+var texture_half_height
+
 enum LINE_ORIENTATIONS {
 	LO_LEFT = 180,
 	LO_TOP = 270,
@@ -69,6 +72,8 @@ signal wall_ready(wall, point_block_A, point_block_B, is_horizontal)
 func _ready():
 	
 	$ExpandTimer.wait_time = SEGMENT_COOLDOWN_SEC
+	
+	texture_half_height = $MainBall.texture.get_height() / 2
 	
 	#is orientation left/right right now for cannons
 	orientation_LR = true

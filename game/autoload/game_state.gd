@@ -77,3 +77,26 @@ highlight_color = null):
 		result_arr.append(block)
 	
 	return poly_idx
+	
+func calc_poly_area_nodes(polygon_nodes):
+	var globals = []
+	for node in polygon_nodes:
+		globals.append(node.global_position)
+	
+	return calc_poly_area(PoolVector2Array(globals))
+
+func calc_poly_area(polygon_points):
+	
+	var total_area = 0.0
+	for idx in range(0, polygon_points.size()):
+		var point1 = polygon_points[idx]
+		var point2 = polygon_points[(idx + 1) % polygon_points.size()]
+		#skip case when X is equal since thats 0 area
+		if (point1.x != point2.x):
+			var additive = ((point1.y + point2.y) / 2) * (point2.x - point1.x)
+			total_area += additive
+	
+	#according to this algorhit the area should always be positive, but here if all is well
+	#it will sometimes be negative since Y axis is pointing down, not up like Descartes
+	#sign will ultimately depend on point traversal direction
+	return abs(total_area)

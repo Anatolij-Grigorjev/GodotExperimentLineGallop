@@ -23,6 +23,7 @@ polygon_order = 0
 
 [node name="Area" type="StaticBody2D" parent="." index="0"]
 
+editor/display_folded = true
 input_pickable = true
 collision_layer = 1
 collision_mask = 1
@@ -36,5 +37,30 @@ _sections_unfolded = [ "Collision", "Transform" ]
 
 shape = SubResource( 1 )
 _sections_unfolded = [ "Material", "Transform", "Visibility" ]
+
+[node name="Label" type="Label" parent="." index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_colors/font_color_shadow = Color( 1, 1, 1, 1 )
+align = 1
+valign = 1
+uppercase = true
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Rect", "custom_colors", "custom_fonts" ]
 
 
