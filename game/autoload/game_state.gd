@@ -69,7 +69,10 @@ highlight_color = null):
 	var poly_idx = start_poly_idx
 	
 	for idx in walk_range:
-		var block = from_stage_blocks[idx % from_stage_blocks.size()]
+		#turn small negative indices into loop backwards stage
+		var actual_idx = idx if idx >= 0 else from_stage_blocks.size() + idx
+		#loop around the stage forward due to high indices
+		var block = from_stage_blocks[actual_idx % from_stage_blocks.size()]
 		block.polygon_order = poly_idx
 		poly_idx += 1
 		if (highlight_color != null):

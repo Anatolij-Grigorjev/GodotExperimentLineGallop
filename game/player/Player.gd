@@ -25,7 +25,7 @@ var orientation_LR = true
 var is_firing_line = false
 
 #half height of texture to push out of line when its done
-var texture_half_height
+var texture_extents
 
 enum LINE_ORIENTATIONS {
 	LO_LEFT = 180,
@@ -73,7 +73,7 @@ func _ready():
 	
 	$ExpandTimer.wait_time = SEGMENT_COOLDOWN_SEC
 	
-	texture_half_height = $MainBall.texture.get_height() / 2
+	texture_extents = $MainBall.texture.get_size() / 2
 	
 	#is orientation left/right right now for cannons
 	orientation_LR = true

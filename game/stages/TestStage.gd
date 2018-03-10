@@ -95,81 +95,114 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 	
 	print("A idx: %s | B idx: %s" % [block_a_idx, block_b_idx])
 	
+	var small_area
+	var small_poly
+	var poly_idx = 0
+	var player_offset
 	#create 2 polygons - one with line as one side other as line on other side
 	
-	var poly_idx = 0
+	#HORIZONTAL
 	if (is_horizontal):
+		#set correct player offset
+		player_offset = $Character.texture_extents.y
 		#polygon below line
-		var below_poly_blocks = []
-		
-		#start with new wall blocks
-		poly_idx = G.add_wall_blocks(below_poly_blocks, wall, 0)
-		
-		#because cannon A is on the left in this configuration
-		#the idx of that block is higher since the thing goes 
-		#clockwise from topmost block
-		#add blocks below line
-		G.add_from_stage_blocks(below_poly_blocks, 
-		stage_blocks, 
-		range(block_b_idx, block_a_idx + 1), 
-		poly_idx, 
+		#create polygon below line, 
+		#starting at line from left to right
+		var poly_below_map = do_polygon_creation(
+		wall, 
+		range(block_b_idx, block_a_idx),
 		highlight_color1)
-			
-		sort_poly_blocks(below_poly_blocks)
-		var poly_below = G.bake_polygon(self, below_poly_blocks)
-		var poly_below_area = G.calc_poly_area(poly_below.polygon)
+
 		
 		#polygon above line
-		var above_poly_blocks = []
-		poly_idx = 0
-		var blocks_diff = block_b_idx + (stage_blocks.size() - block_a_idx)
-		#start with blocks above line
-		#actually idx will be culled to use this as a ring
-		poly_idx = G.add_from_stage_blocks(above_poly_blocks,
-		stage_blocks,
-		range(block_a_idx + blocks_diff, block_a_idx, -1),
-		0,
+		#range goes into negative indices 
+		#this will loop around the back of the stage
+		var poly_above_map = do_polygon_creation(
+		wall,
+		range(block_b_idx, block_a_idx - stage_blocks.size(), -1),
 		highlight_color2)
-
-		#add line
-		poly_idx = G.add_wall_blocks(above_poly_blocks, wall, poly_idx)
-		
-		sort_poly_blocks(above_poly_blocks)
-		var poly_above = G.bake_polygon(self, above_poly_blocks)
-		var poly_above_area = G.calc_poly_area(poly_above.polygon)
 		
 		#work with new polygons and their areas:
 		#save larger as new empty poly, fill smaller with element
-		var large_area = poly_below_area
-		var large_poly = poly_below
-		var small_area = poly_above_area
-		var small_poly = poly_above
-		if (poly_below_area < poly_above_area):
-			small_area = poly_below_area
-			small_poly = poly_below
-			large_area = poly_above_area
-			large_poly = poly_above
-		
-		#add smaller poly to fill and put element color
-		add_to_fill(small_area)
-		small_poly.color = G.ELEM_COLORS[$Character.curr_elem_idx]
-		
-		#push player into larger polygon
-		var offset = $Character.texture_half_height
-		if (small_poly == poly_above):
-			$Character.global_position.y += offset
+		#push player into empty polygon
+		if (poly_below_map.area < poly_above_map.area):
+			$Character.global_position.y += player_offset
+			stage_blocks = poly_above_map.blocks
+			small_area = poly_below_map.area
+			small_poly = poly_below_map.polygon
 		else:
-			$Character.global_position.y -= offset
+			$Character.global_position.y -= player_offset
+			stage_blocks = poly_below_map.blocks
+			small_area = poly_above_map.area
+			small_poly = poly_above_map.polygon
 		
-		#use nodes of larger poly as new main stage polygon
-		if (large_poly == poly_above):
-			stage_blocks = above_poly_blocks
+	#VERTICAL
+	else:
+		#set correct player offset
+		player_offset = $Character.texture_extents.x
+		
+		#polygon before line
+		#wall goes top to bottom, at bottom indices are higher
+		#need to add enough range offset to loop the stage
+		var diff = stage_blocks.size() - block_b_idx + block_a_idx
+		var poly_before_map = do_polygon_creation(
+		wall, 
+		range(block_b_idx, block_b_idx + diff),
+		highlight_color1)
+		
+		#polyon after line
+		#after wall calculated top to bottom, 
+		#the bottom indices are higher but they move back to top
+		var poly_after_map = do_polygon_creation(
+		wall, 
+		range(block_b_idx, block_a_idx + 1, -1),
+		highlight_color2)
+		
+		#work with new polygons and their areas:
+		#save larger as new empty poly, 
+		#fill smaller with element
+		#push player into empty polygon
+		if (poly_before_map.area < poly_after_map.area):
+			$Character.global_position.x -= player_offset
+			stage_blocks = poly_after_map.blocks
+			small_area = poly_before_map.area
+			small_poly = poly_before_map.polygon
 		else:
-			stage_blocks = below_poly_blocks
+			$Character.global_position.x += player_offset
+			stage_blocks = poly_before_map.blocks
+			small_area = poly_after_map.area
+			small_poly = poly_after_map.polygon
 		
-
+	#add smaller poly to fill and put element color
+	add_to_fill(small_area)
+	small_poly.color = G.ELEM_COLORS[$Character.curr_elem_idx]
 	pass
 	
+	
+func do_polygon_creation(wall, stage_idx_range, highlight_color):
+	
+	var poly_idx = 0
+	var poly_blocks = []
+	
+	#add new wall blocks, always goes from first to last
+	poly_idx = G.add_wall_blocks(poly_blocks, wall, 0)
+	
+	#add blocks from stage, using supplied range
+	G.add_from_stage(poly_blocks,
+	stage_blocks,
+	stage_idx_range,
+	poly_idx,
+	highlight_color)
+	
+	#sort blocks one last time
+	sort_poly_blocks(poly_blocks)
+	var polygon = G.bake_polygon(self, poly_blocks)
+	#return the polygon info map
+	return {
+		"blocks": poly_blocks,
+		"polygon": polygon,
+		"area": G.calc_poly_area(polygon.polygon)
+	}
 	
 
 func sort_poly_blocks(blocks):
