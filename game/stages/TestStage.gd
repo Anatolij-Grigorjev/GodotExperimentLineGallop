@@ -76,12 +76,12 @@ func _process(delta):
 				print("%s: %s" % [current_block_idx, stage_blocks[current_block_idx].global_position])
 				stage_blocks[current_block_idx].modulate = highlight_color1
 				if (current_block_idx > 0):
-					stage_blocks[current_block_idx - 1].modulate = Color(1.0, 1.0, 1.0)
+					stage_blocks[current_block_idx - 1].modulate = G.COLOR_SOLID
 				current_block_idx += 1
 				current_highlight_time = highlight_time
 			#all blocks done, finish highlight
 			else:
-				stage_blocks[current_block_idx - 1].modulate = Color(1.0, 1.0, 1.0)
+				stage_blocks[current_block_idx - 1].modulate = G.COLOR_SOLID
 				current_block_idx = 0
 				is_highlighting = false
 				
@@ -110,8 +110,7 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 		#starting at line from left to right
 		var poly_below_map = do_polygon_creation(
 		wall, 
-		range(block_b_idx, block_a_idx),
-		highlight_color1)
+		range(block_b_idx, block_a_idx))
 
 		
 		#polygon above line
@@ -119,19 +118,18 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 		#this will loop around the back of the stage
 		var poly_above_map = do_polygon_creation(
 		wall,
-		range(block_b_idx, block_a_idx - stage_blocks.size(), -1),
-		highlight_color2)
+		range(block_b_idx, block_a_idx - stage_blocks.size() - 1, -1))
 		
 		#work with new polygons and their areas:
 		#save larger as new empty poly, fill smaller with element
 		#push player into empty polygon
 		if (poly_below_map.area < poly_above_map.area):
-			$Character.global_position.y += player_offset
+			$Character.global_position.y -= player_offset
 			stage_blocks = poly_above_map.blocks
 			small_area = poly_below_map.area
 			small_poly = poly_below_map.polygon
 		else:
-			$Character.global_position.y -= player_offset
+			$Character.global_position.y += player_offset
 			stage_blocks = poly_below_map.blocks
 			small_area = poly_above_map.area
 			small_poly = poly_above_map.polygon
@@ -147,28 +145,27 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 		var diff = stage_blocks.size() - block_b_idx + block_a_idx
 		var poly_before_map = do_polygon_creation(
 		wall, 
-		range(block_b_idx, block_b_idx + diff),
-		highlight_color1)
+		range(block_b_idx, block_b_idx + diff))
 		
 		#polyon after line
 		#after wall calculated top to bottom, 
 		#the bottom indices are higher but they move back to top
+		#have to subsctract 1 from lower indices to account for range
 		var poly_after_map = do_polygon_creation(
 		wall, 
-		range(block_b_idx, block_a_idx + 1, -1),
-		highlight_color2)
+		range(block_b_idx, block_a_idx - 1, -1))
 		
 		#work with new polygons and their areas:
 		#save larger as new empty poly, 
 		#fill smaller with element
 		#push player into empty polygon
 		if (poly_before_map.area < poly_after_map.area):
-			$Character.global_position.x -= player_offset
+			$Character.global_position.x += player_offset
 			stage_blocks = poly_after_map.blocks
 			small_area = poly_before_map.area
 			small_poly = poly_before_map.polygon
 		else:
-			$Character.global_position.x += player_offset
+			$Character.global_position.x -= player_offset
 			stage_blocks = poly_before_map.blocks
 			small_area = poly_after_map.area
 			small_poly = poly_after_map.polygon
@@ -179,7 +176,11 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 	pass
 	
 	
-func do_polygon_creation(wall, stage_idx_range, highlight_color):
+func do_polygon_creation(wall, stage_idx_range, highlight_color = G.COLOR_SOLID):
+	
+	var range_string = G.range_to_string(stage_idx_range)
+	
+	print("create polygon from idx range: %s" % range_string)
 	
 	var poly_idx = 0
 	var poly_blocks = []
@@ -188,7 +189,7 @@ func do_polygon_creation(wall, stage_idx_range, highlight_color):
 	poly_idx = G.add_wall_blocks(poly_blocks, wall, 0)
 	
 	#add blocks from stage, using supplied range
-	G.add_from_stage(poly_blocks,
+	G.add_from_stage_blocks(poly_blocks,
 	stage_blocks,
 	stage_idx_range,
 	poly_idx,

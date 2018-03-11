@@ -16,6 +16,7 @@ var ELEM_COLORS = {
 }
 
 var COLOR_TRANSPEARANT = Color(1.0, 1.0, 1.0, 0.0)
+var COLOR_SOLID = Color(1.0, 1.0, 1.0)
 
 
 func _ready():
@@ -103,3 +104,13 @@ func calc_poly_area(polygon_points):
 	#it will sometimes be negative since Y axis is pointing down, not up like Descartes
 	#sign will ultimately depend on point traversal direction
 	return abs(total_area)
+
+func range_to_string(a_range):
+	var string = "["
+	for idx in range(a_range.size()):
+		if (idx < a_range.size() - 1):
+			string += ("%s, " % a_range[idx])
+		else:
+			string += str(a_range[idx])
+	string += "]"
+	return string
