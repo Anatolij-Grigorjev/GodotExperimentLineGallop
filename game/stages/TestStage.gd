@@ -93,6 +93,8 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 	var block_a_idx = point_block_A.polygon_order
 	var block_b_idx = point_block_B.polygon_order
 	
+	#depedning on current wall polygon order rotation, A might be bigger or smaller
+	#than B, so both need to be accounted for
 	print("A idx: %s | B idx: %s" % [block_a_idx, block_b_idx])
 	
 	var small_area
@@ -110,7 +112,7 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 		#starting at line from left to right
 		var poly_below_map = do_polygon_creation(
 		wall, 
-		range(block_b_idx, block_a_idx))
+		range(block_b_idx, block_a_idx)) 
 
 		
 		#polygon above line
@@ -142,10 +144,18 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 		#polygon before line
 		#wall goes top to bottom, at bottom indices are higher
 		#need to add enough range offset to loop the stage
-		var diff = stage_blocks.size() - block_b_idx + block_a_idx
+		var diff
+		var larger_idx
+		if (block_a_idx < block_b_idx):
+			diff = stage_blocks.size() - block_b_idx + block_a_idx 
+			larger_idx = block_b_idx
+		else:
+			diff = stage_blocks.size() - block_a_idx + block_b_idx
+			larger_idx = block_a_idx
 		var poly_before_map = do_polygon_creation(
 		wall, 
-		range(block_b_idx, block_b_idx + diff))
+		range(larger_idx, larger_idx + diff)
+		)
 		
 		#polyon after line
 		#after wall calculated top to bottom, 
@@ -153,7 +163,8 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 		#have to subsctract 1 from lower indices to account for range
 		var poly_after_map = do_polygon_creation(
 		wall, 
-		range(block_b_idx, block_a_idx - 1, -1))
+		range(block_b_idx, block_a_idx - 1, -1) if block_a_idx < block_b_idx else range(block_a_idx, block_b_idx - 1, -1)
+		)
 		
 		#work with new polygons and their areas:
 		#save larger as new empty poly, 
