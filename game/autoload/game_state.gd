@@ -9,6 +9,12 @@ enum ELEMENTS {
 	
 }
 
+enum ROTATIONS {
+	
+	CW = 1,
+	CCW = -1
+}
+
 var ELEM_COLORS = {
 	FIRE: Color(1.0, 0.145, 0.145),
 	ICE: Color(0.093, 0.878, 0.839),

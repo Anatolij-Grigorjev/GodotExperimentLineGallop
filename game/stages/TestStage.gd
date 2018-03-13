@@ -7,6 +7,10 @@ var largest_filled_area = 0.0
 
 
 var stage_blocks = []
+#either 1 or -1
+#signifies indices direction from top blocks to bottom blocks
+#rotation indices can be clockwise, or CCW
+onready var stage_blocks_direction = G.CW
 
 var current_block_idx = 0
 var highlight_color1 = Color(1.0, 1.0, 0.1)
@@ -128,11 +132,15 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 		if (poly_below_map.area < poly_above_map.area):
 			$Character.global_position.y -= player_offset
 			stage_blocks = poly_above_map.blocks
+			#blocks now go CCW
+			stage_blocks_direction = G.CCW
 			small_area = poly_below_map.area
 			small_poly = poly_below_map.polygon
 		else:
 			$Character.global_position.y += player_offset
 			stage_blocks = poly_below_map.blocks
+			#blocks now go CW
+			stage_blocks_direction = G.CW
 			small_area = poly_above_map.area
 			small_poly = poly_above_map.polygon
 		
@@ -140,30 +148,39 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 	else:
 		#set correct player offset
 		player_offset = $Character.texture_extents.x
-		
+		var the_range
 		#polygon before line
-		#wall goes top to bottom, at bottom indices are higher
-		#need to add enough range offset to loop the stage
-		var diff
-		var larger_idx
-		if (block_a_idx < block_b_idx):
+		#wall goes top to bottom
+		var diff 
+		the_range
+		#if poly rotation is CW then bottom can
+		#"behind" wall by increasing till we loop up to top idx
+		if (stage_blocks_direction == G.CW):
 			diff = stage_blocks.size() - block_b_idx + block_a_idx 
-			larger_idx = block_b_idx
+			the_range = range(block_b_idx, block_b_idx + diff)
+		#if poly rotation is CCW then bottom indices 
+		#go "behind" wall by decreasing from bottom indices to 0 
+		#and looping to top
 		else:
-			diff = stage_blocks.size() - block_a_idx + block_b_idx
-			larger_idx = block_a_idx
+			diff = stage_blocks.size() - block_a_idx
+			the_range = range(block_b_idx, -diff - 1, -1)
 		var poly_before_map = do_polygon_creation(
 		wall, 
-		range(larger_idx, larger_idx + diff)
-		)
+		the_range)
 		
 		#polyon after line
-		#after wall calculated top to bottom, 
-		#the bottom indices are higher but they move back to top
-		#have to subsctract 1 from lower indices to account for range
+		#after wall calculated top to bottom 
+		#if stage was rotated CW then in front of wall natural 
+		#progression backwards via -1 from B to A
+		if (stage_blocks_direction == G.CW):
+			the_range = range(block_b_idx, block_a_idx - 1, -1)
+		#if stage is rotated CCW then progression front of wall
+		#is positive direction from B to A
+		else:
+			the_range = range(block_b_idx, block_a_idx + 1)
 		var poly_after_map = do_polygon_creation(
 		wall, 
-		range(block_b_idx, block_a_idx - 1, -1) if block_a_idx < block_b_idx else range(block_a_idx, block_b_idx - 1, -1)
+		the_range
 		)
 		
 		#work with new polygons and their areas:
@@ -173,17 +190,21 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 		if (poly_before_map.area < poly_after_map.area):
 			$Character.global_position.x += player_offset
 			stage_blocks = poly_after_map.blocks
+			stage_blocks_direction = G.CCW
 			small_area = poly_before_map.area
 			small_poly = poly_before_map.polygon
 		else:
 			$Character.global_position.x -= player_offset
 			stage_blocks = poly_before_map.blocks
+			stage_blocks_direction = G.CW
 			small_area = poly_after_map.area
 			small_poly = poly_after_map.polygon
 		
 	#add smaller poly to fill and put element color
 	add_to_fill(small_area)
 	small_poly.color = G.ELEM_COLORS[$Character.curr_elem_idx]
+	
+	print("POLY IDX ROT: %s" % stage_blocks_direction)
 	pass
 	
 	
@@ -209,11 +230,13 @@ func do_polygon_creation(wall, stage_idx_range, highlight_color = G.COLOR_SOLID)
 	#sort blocks one last time
 	sort_poly_blocks(poly_blocks)
 	var polygon = G.bake_polygon(self, poly_blocks)
+	var poly_area = G.calc_poly_area(polygon.polygon)
+	print("polygon area: %s" % poly_area)
 	#return the polygon info map
 	return {
 		"blocks": poly_blocks,
 		"polygon": polygon,
-		"area": G.calc_poly_area(polygon.polygon)
+		"area": poly_area
 	}
 	
 
