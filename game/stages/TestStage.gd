@@ -97,6 +97,10 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 	var block_a_idx = point_block_A.polygon_order
 	var block_b_idx = point_block_B.polygon_order
 	
+	#test which index is larger since thats the second dimension
+	#impactin proper poly indices calculation (first is index rotation)
+	var larger_a = block_a_idx > block_b_idx
+	
 	#depedning on current wall polygon order rotation, A might be bigger or smaller
 	#than B, so both need to be accounted for
 	print("A idx: %s | B idx: %s" % [block_a_idx, block_b_idx])
@@ -156,14 +160,31 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 		#if poly rotation is CW then bottom can
 		#"behind" wall by increasing till we loop up to top idx
 		if (stage_blocks_direction == G.CW):
-			diff = stage_blocks.size() - block_b_idx + block_a_idx 
-			the_range = range(block_b_idx, block_b_idx + diff)
+			#with b being larger it just increases index until it loops
+			#behind the wall to reach lower a
+			if (not larger_a):
+				diff = stage_blocks.size() - block_b_idx + block_a_idx 
+				the_range = range(block_b_idx, block_b_idx + diff)
+			#if b is smaller, looping behind wall going clockwise means 
+			#simple increase in indices
+			else:
+				the_range = range(block_b_idx, block_a_idx + 1)
 		#if poly rotation is CCW then bottom indices 
 		#go "behind" wall by decreasing from bottom indices to 0 
 		#and looping to top
 		else:
-			diff = stage_blocks.size() - block_a_idx
-			the_range = range(block_b_idx, -diff - 1, -1)
+			#B is larger, so going CCW behind wall means 
+			#decreasing B by diff
+			if (not larger_a):
+				diff = stage_blocks.size() - block_a_idx
+				the_range = range(block_b_idx, -diff - 1, -1)
+			#a is larger, so when indices rotate CCW
+			#going from b to a means looping from B backwards
+			# over polies to make it to A
+			else:
+				diff = block_b_idx + (stage_blocks.size() - block_a_idx)
+				the_range = range(block_b_idx, -diff, -1)
+				
 		var poly_before_map = do_polygon_creation(
 		wall, 
 		the_range)
@@ -171,13 +192,27 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 		#polyon after line
 		#after wall calculated top to bottom 
 		#if stage was rotated CW then in front of wall natural 
-		#progression backwards via -1 from B to A
+		#progression backwards via -1 from B to A (when B is larger)
 		if (stage_blocks_direction == G.CW):
-			the_range = range(block_b_idx, block_a_idx - 1, -1)
+			if (not larger_a):
+				the_range = range(block_b_idx, block_a_idx - 1, -1)
+			#A is larger so when indices going CW, rotation to 
+			#after wall is reaching 0 from B and keep 
+			#moving back till we hit A
+			else:
+				diff = block_b_idx + (stage_blocks.size() - block_a_idx)
+				the_range = range(block_b_idx, -diff, -1)
+				
 		#if stage is rotated CCW then progression front of wall
 		#is positive direction from B to A
 		else:
-			the_range = range(block_b_idx, block_a_idx + 1)
+			#natural rotation direction if A larger than B
+			if (larger_a):
+				the_range = range(block_b_idx, block_a_idx + 1)
+			else:
+				#if B larger than A,  progress backwards naturally
+				the_range = range(block_b_idx, block_a_idx, -1)
+				
 		var poly_after_map = do_polygon_creation(
 		wall, 
 		the_range
