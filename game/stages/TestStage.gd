@@ -16,7 +16,7 @@ var current_block_idx = 0
 var highlight_color1 = Color(1.0, 1.0, 0.1)
 var highlight_color2 = Color(0.1, 0.1, 1.0)
 
-var highlight_time = 0.25
+var highlight_time = 0.15
 var current_highlight_time = 0.0
 
 var fill_level = 0.0
@@ -103,7 +103,11 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 	
 	#depedning on current wall polygon order rotation, A might be bigger or smaller
 	#than B, so both need to be accounted for
-	print("A idx: %s | B idx: %s" % [block_a_idx, block_b_idx])
+	print("A idx: %s | B idx: %s | ROT: %s | SIZE: %s" % [
+	block_a_idx, 
+	block_b_idx,
+	stage_blocks_direction,
+	stage_blocks.size()])
 	
 	var small_area
 	var small_poly
@@ -150,6 +154,7 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 		
 	#VERTICAL
 	else:
+		print("polygon BEFORE line!")
 		#set correct player offset
 		player_offset = $Character.texture_extents.x
 		var the_range
@@ -180,15 +185,16 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 				the_range = range(block_b_idx, -diff - 1, -1)
 			#a is larger, so when indices rotate CCW
 			#going from b to a means looping from B backwards
-			# over polies to make it to A
+			# over 0 polies to make it to A
 			else:
-				diff = block_b_idx + (stage_blocks.size() - block_a_idx)
+				diff = (stage_blocks.size() - block_a_idx)
 				the_range = range(block_b_idx, -diff, -1)
 				
 		var poly_before_map = do_polygon_creation(
 		wall, 
 		the_range)
 		
+		print("polygon AFTER line!")
 		#polyon after line
 		#after wall calculated top to bottom 
 		#if stage was rotated CW then in front of wall natural 
@@ -200,7 +206,7 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 			#after wall is reaching 0 from B and keep 
 			#moving back till we hit A
 			else:
-				diff = block_b_idx + (stage_blocks.size() - block_a_idx)
+				diff = (stage_blocks.size() - block_a_idx)
 				the_range = range(block_b_idx, -diff, -1)
 				
 		#if stage is rotated CCW then progression front of wall
@@ -247,7 +253,7 @@ func do_polygon_creation(wall, stage_idx_range, highlight_color = G.COLOR_SOLID)
 	
 	var range_string = G.range_to_string(stage_idx_range)
 	
-	print("create polygon from idx range: %s" % range_string)
+	print("create polygon from idx range: %s (size %s)" % [range_string, stage_idx_range.size()])
 	
 	var poly_idx = 0
 	var poly_blocks = []
