@@ -77,7 +77,7 @@ func _process(delta):
 		else:
 			#highlight next block
 			if (current_block_idx < stage_blocks.size()):
-				print("%s: %s" % [current_block_idx, stage_blocks[current_block_idx].global_position])
+#				print("%s: %s" % [current_block_idx, stage_blocks[current_block_idx].global_position])
 				stage_blocks[current_block_idx].modulate = highlight_color1
 				if (current_block_idx > 0):
 					stage_blocks[current_block_idx - 1].modulate = G.COLOR_SOLID
@@ -117,22 +117,74 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 	
 	#HORIZONTAL
 	if (is_horizontal):
+		print("polygon BELOW line")
 		#set correct player offset
 		player_offset = $Character.texture_extents.y
+		var the_range
+		#polygon before line
+		#wall goes top to bottom
+		var diff 
 		#polygon below line
-		#create polygon below line, 
-		#starting at line from left to right
+	
+		if (stage_blocks_direction == G.CW):
+			#rotation CW and A is smaller so 
+			#make point B go forward till looped to A
+			if (not larger_a):
+				the_range = range(block_b_idx, stage_blocks.size() + block_a_idx)
+				print("ROT: CW, A < B")
+			#rotation CW A is larger than B
+			#so B simply moves along
+			else:
+				the_range = range(block_b_idx, block_a_idx + 1)
+				print("ROT: CW, A > B")
+		else:
+			#rotation CCW and A is smaller than B
+			#so B simply moves backwards till A
+			if (not larger_a):
+				the_range = range(block_b_idx, block_a_idx - 1, -1)
+				print("ROT: CCW, A < B")
+			#A is larger than B, so B must loop over start back to A 
+			else:
+				diff = stage_blocks.size() - block_a_idx
+				the_range = range(block_b_idx, -diff - 1, -1)
+				print("ROT: CCW, A > B")
+			
 		var poly_below_map = do_polygon_creation(
 		wall, 
-		range(block_b_idx, block_a_idx)) 
+		the_range) 
 
 		
 		#polygon above line
-		#range goes into negative indices 
-		#this will loop around the back of the stage
+		
+		if (stage_blocks_direction == G.CW):
+			
+			#if going CW and A is smaller than B then 
+			#above is natural progression from A to B, 
+			#so B to A is same but negative
+			if (not larger_a):
+				the_range = range(block_b_idx, block_a_idx - 1, -1)
+				print("ROT: CW, A < B")
+			#A is larger than B and going CW
+			#so from B to A we loop over 0 poly idx and go beyond
+			else:
+				diff = stage_blocks.size() - block_a_idx
+				the_range = range(block_b_idx, -diff - 1, -1)
+				print("ROT: CW, A > B")
+		else:
+			#A is smaller and going CCW
+			#need to grwo B big enough to loop over 0 and get to A
+			if (not larger_a):
+				the_range = range(block_b_idx, stage_blocks.size() + block_a_idx)
+				print("ROT: CCW, A < B")
+			#A is larger and going CCW
+			#B moves natural direction to A
+			else:
+				the_range = range(block_b_idx, block_a_idx + 1)
+				print("ROT: CCW, A > B")
+		
 		var poly_above_map = do_polygon_creation(
 		wall,
-		range(block_b_idx, block_a_idx - stage_blocks.size() - 1, -1))
+		the_range)
 		
 		#work with new polygons and their areas:
 		#save larger as new empty poly, fill smaller with element
@@ -161,7 +213,6 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 		#polygon before line
 		#wall goes top to bottom
 		var diff 
-		the_range
 		#if poly rotation is CW then bottom can
 		#"behind" wall by increasing till we loop up to top idx
 		if (stage_blocks_direction == G.CW):
@@ -170,10 +221,12 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 			if (not larger_a):
 				diff = stage_blocks.size() - block_b_idx + block_a_idx 
 				the_range = range(block_b_idx, block_b_idx + diff)
+				print("ROT: CW, A < B")
 			#if b is smaller, looping behind wall going clockwise means 
 			#simple increase in indices
 			else:
 				the_range = range(block_b_idx, block_a_idx + 1)
+				print("ROT: CW, A > B")
 		#if poly rotation is CCW then bottom indices 
 		#go "behind" wall by decreasing from bottom indices to 0 
 		#and looping to top
@@ -183,12 +236,14 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 			if (not larger_a):
 				diff = stage_blocks.size() - block_a_idx
 				the_range = range(block_b_idx, -diff - 1, -1)
+				print("ROT: CCW, A < B")
 			#a is larger, so when indices rotate CCW
 			#going from b to a means looping from B backwards
 			# over 0 polies to make it to A
 			else:
 				diff = (stage_blocks.size() - block_a_idx)
 				the_range = range(block_b_idx, -diff, -1)
+				print("ROT: CCW, A > B")
 				
 		var poly_before_map = do_polygon_creation(
 		wall, 
@@ -202,12 +257,14 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 		if (stage_blocks_direction == G.CW):
 			if (not larger_a):
 				the_range = range(block_b_idx, block_a_idx - 1, -1)
+				print("ROT: CW, A < B")
 			#A is larger so when indices going CW, rotation to 
 			#after wall is reaching 0 from B and keep 
 			#moving back till we hit A
 			else:
 				diff = (stage_blocks.size() - block_a_idx)
 				the_range = range(block_b_idx, -diff, -1)
+				print("ROT: CW, A > B")
 				
 		#if stage is rotated CCW then progression front of wall
 		#is positive direction from B to A
@@ -215,9 +272,11 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 			#natural rotation direction if A larger than B
 			if (larger_a):
 				the_range = range(block_b_idx, block_a_idx + 1)
+				print("ROT: CCW, A < B")
 			else:
 				#if B larger than A,  progress backwards naturally
 				the_range = range(block_b_idx, block_a_idx, -1)
+				print("ROT: CCW, A > B")
 				
 		var poly_after_map = do_polygon_creation(
 		wall, 
