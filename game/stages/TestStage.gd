@@ -16,12 +16,16 @@ var current_block_idx = 0
 var highlight_color1 = Color(1.0, 1.0, 0.1)
 var highlight_color2 = Color(0.1, 0.1, 1.0)
 
-var highlight_time = 0.15
+var highlight_time = 0.05
 var current_highlight_time = 0.0
 
 var fill_level = 0.0
 
 var is_highlighting = false
+var highlight_blocks = stage_blocks
+var post_highlight_poly = {
+	"color": null
+}
 
 func _ready():
 	
@@ -36,7 +40,7 @@ func _ready():
 	
 	#bake initial stage poly
 	G.bake_polygon(self, stage_blocks)
-	
+	highlight_blocks = stage_blocks
 	set_fill_level(0.0)
 	
 	print("largest poly area: %s" % largest_empty_area)
@@ -67,26 +71,39 @@ func sort_by_poly_order(item1, item2):
 func _process(delta):
 	
 	if (not is_highlighting):
-		#start highlight process
-		if (Input.is_action_just_released("ui_accept")):
+		#start highlight process (dont allow reset)
+		if (Input.is_action_just_released("ui_accept") and not is_highlighting):
 			is_highlighting = true
+			highlight_blocks = stage_blocks
+			post_highlight_poly = null
+			current_block_idx = 0
 	else:
 		#wait for highlight expry
 		if (current_highlight_time > 0):
 			current_highlight_time -= delta
 		else:
 			#highlight next block
-			if (current_block_idx < stage_blocks.size()):
+			if (current_block_idx < highlight_blocks.size()):
 #				print("%s: %s" % [current_block_idx, stage_blocks[current_block_idx].global_position])
-				stage_blocks[current_block_idx].modulate = highlight_color1
+				highlight_blocks[current_block_idx].modulate = highlight_color1
 				if (current_block_idx > 0):
-					stage_blocks[current_block_idx - 1].modulate = G.COLOR_SOLID
+					highlight_blocks[current_block_idx - 1].modulate = G.COLOR_SOLID
 				current_block_idx += 1
 				current_highlight_time = highlight_time
 			#all blocks done, finish highlight
 			else:
-				stage_blocks[current_block_idx - 1].modulate = G.COLOR_SOLID
+				highlight_blocks[current_block_idx - 1].modulate = G.COLOR_SOLID
 				current_block_idx = 0
+				#if there is poly info, bake poly
+				if (post_highlight_poly != null):
+					G.bake_polygon(
+					self, 
+					highlight_blocks, 
+					post_highlight_poly.color
+					)
+					post_highlight_poly = null
+					highlight_blocks = stage_blocks
+				#after all is done, highlight is finished
 				is_highlighting = false
 				
 
@@ -110,7 +127,7 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 	stage_blocks.size()])
 	
 	var small_area
-	var small_poly
+	
 	var poly_idx = 0
 	var player_offset
 	#create 2 polygons - one with line as one side other as line on other side
@@ -155,7 +172,7 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 
 		
 		#polygon above line
-		
+		print("polygon ABOVE line")
 		if (stage_blocks_direction == G.CW):
 			
 			#if going CW and A is smaller than B then 
@@ -195,14 +212,14 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 			#blocks now go CCW
 			stage_blocks_direction = G.CCW
 			small_area = poly_below_map.area
-			small_poly = poly_below_map.polygon
+			start_poly_bake(poly_below_map.blocks)
 		else:
 			$Character.global_position.y += player_offset
 			stage_blocks = poly_below_map.blocks
 			#blocks now go CW
 			stage_blocks_direction = G.CW
 			small_area = poly_above_map.area
-			small_poly = poly_above_map.polygon
+			start_poly_bake(poly_above_map.blocks)
 		
 	#VERTICAL
 	else:
@@ -292,17 +309,16 @@ func got_wall(wall, point_block_A, point_block_B, is_horizontal):
 			stage_blocks = poly_after_map.blocks
 			stage_blocks_direction = G.CCW
 			small_area = poly_before_map.area
-			small_poly = poly_before_map.polygon
+			start_poly_bake(poly_before_map.blocks)
 		else:
 			$Character.global_position.x -= player_offset
 			stage_blocks = poly_before_map.blocks
 			stage_blocks_direction = G.CW
 			small_area = poly_after_map.area
-			small_poly = poly_after_map.polygon
+			start_poly_bake(poly_after_map.blocks)
 		
 	#add smaller poly to fill and put element color
 	add_to_fill(small_area)
-	small_poly.color = G.ELEM_COLORS[$Character.curr_elem_idx]
 	
 	print("POLY IDX ROT: %s" % stage_blocks_direction)
 	pass
@@ -329,16 +345,23 @@ func do_polygon_creation(wall, stage_idx_range, highlight_color = G.COLOR_SOLID)
 	
 	#sort blocks one last time
 	sort_poly_blocks(poly_blocks)
-	var polygon = G.bake_polygon(self, poly_blocks)
-	var poly_area = G.calc_poly_area(polygon.polygon)
+	var poly_area = G.calc_poly_area_nodes(poly_blocks)
 	print("polygon area: %s" % poly_area)
+	
 	#return the polygon info map
 	return {
 		"blocks": poly_blocks,
-		"polygon": polygon,
+		"polygon": null,
 		"area": poly_area
 	}
 	
+func start_poly_bake(poly_blocks):
+	#begin pre-poly highlight
+	is_highlighting = true
+	highlight_blocks = poly_blocks
+	post_highlight_poly = {
+		"color": G.ELEM_COLORS[$Character.curr_elem_idx]
+	}
 
 func sort_poly_blocks(blocks):
 	#sort points by polygon ordering
